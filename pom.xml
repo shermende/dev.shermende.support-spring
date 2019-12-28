@@ -41,6 +41,17 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
 
+    <distributionManagement>
+        <repository>
+            <id>oss</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+        <snapshotRepository>
+            <id>oss</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
+
     <dependencies>
 
         <!--spring-->
@@ -101,7 +112,7 @@
             <version>1.7.29</version>
         </dependency>
 
-        <!--spring-test-->
+        <!--test-->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
@@ -110,7 +121,7 @@
             <version>5.0.5.RELEASE</version>
         </dependency>
 
-        <!--spring-test-->
+        <!--test-->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -119,7 +130,7 @@
             <version>4.12</version>
         </dependency>
 
-        <!--spring-test. jpa-->
+        <!--test. jpa spring-->
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-jpa</artifactId>
@@ -128,7 +139,7 @@
             <version>2.1.0.RELEASE</version>
         </dependency>
 
-        <!--spring-test. jpa-->
+        <!--test. jpa hibernate-->
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
@@ -137,7 +148,7 @@
             <version>5.2.16.Final</version>
         </dependency>
 
-        <!--spring-test. jpa-->
+        <!--test. jpa db-->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
@@ -155,6 +166,52 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
+            </plugin>
+
+            <!--Javadoc and Sources Attachments-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.2.1</version>
+                <executions>
+                    <execution>
+                        <id>sources</id>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!--Javadoc and Sources Attachments-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.9.1</version>
+                <executions>
+                    <execution>
+                        <id>javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!--GPG Signed Components-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.5</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
 
         </plugins>
