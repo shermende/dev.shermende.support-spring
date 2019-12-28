@@ -4,19 +4,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>org.sonatype.oss</groupId>
-        <artifactId>oss-parent</artifactId>
-        <version>7</version>
-    </parent>
-
     <groupId>dev.shermende.spring</groupId>
-    <artifactId>spring-support-parent</artifactId>
-    <packaging>pom</packaging>
+    <artifactId>spring-support</artifactId>
+    <packaging>jar</packaging>
     <version>1.0-SNAPSHOT</version>
 
-    <name>Support parent</name>
-    <description>Support parent dependency resolver</description>
+    <name>Support</name>
+    <description>Support</description>
     <url>https://github.com/shermende/dev.shermende.spring.support</url>
 
     <licenses>
@@ -45,121 +39,114 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <gpg.passphrase>see-settings-xml</gpg.passphrase>
     </properties>
 
-    <modules>
-        <module>spring-support</module>
-        <module>spring-support-intercept</module>
-        <module>spring-support-validate</module>
-    </modules>
+    <dependencies>
 
-    <dependencyManagement>
+        <!--spring-->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <scope>provided</scope>
+            <version>5.0.5.RELEASE</version>
+        </dependency>
 
-        <dependencies>
+        <!--aop-->
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>1.8.13</version>
+            <scope>provided</scope>
+        </dependency>
 
-            <!-- support dependencies-->
-            <dependency>
-                <groupId>dev.shermende.spring</groupId>
-                <artifactId>spring-support</artifactId>
-                <version>1.0-SNAPSHOT</version>
-            </dependency>
+        <!--validation-->
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <scope>provided</scope>
+            <version>2.0.1.Final</version>
+        </dependency>
 
-            <dependency>
-                <groupId>dev.shermende.spring</groupId>
-                <artifactId>spring-support-validate</artifactId>
-                <version>1.0-SNAPSHOT</version>
-            </dependency>
+        <!--validation-->
+        <!--javax.validation.NoProviderFoundException: Unable to create a Configuration, because no Bean Validation-->
+        <dependency>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <scope>provided</scope>
+            <version>6.0.9.Final</version>
+        </dependency>
 
-            <dependency>
-                <groupId>dev.shermende.spring</groupId>
-                <artifactId>spring-support-intercept</artifactId>
-                <version>1.0-SNAPSHOT</version>
-            </dependency>
+        <!--validation-->
+        <!--javax.validation.ValidationException: HV000183: Unable to initialize 'javax.el.ExpressionFactory-->
+        <dependency>
+            <groupId>org.glassfish</groupId>
+            <artifactId>javax.el</artifactId>
+            <scope>provided</scope>
+            <version>3.0.0</version>
+        </dependency>
 
-            <!-- general spring dependency-->
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-context</artifactId>
-                <version>5.0.5.RELEASE</version>
-            </dependency>
+        <!--logging-->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <scope>provided</scope>
+            <version>1.7.29</version>
+        </dependency>
 
-            <!-- aspectj dependency -->
-            <dependency>
-                <groupId>org.aspectj</groupId>
-                <artifactId>aspectjweaver</artifactId>
-                <version>1.8.13</version>
-            </dependency>
+        <!--logging-->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <scope>provided</scope>
+            <version>1.7.29</version>
+        </dependency>
 
-            <!-- javax validation-->
-            <dependency>
-                <groupId>javax.validation</groupId>
-                <artifactId>validation-api</artifactId>
-                <version>2.0.1.Final</version>
-            </dependency>
+        <!--spring-test-->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <scope>test</scope>
+            <optional>true</optional>
+            <version>5.0.5.RELEASE</version>
+        </dependency>
 
-            <!-- javax.validation.NoProviderFoundException: Unable to create a Configuration, because no Bean Validation provider could be found. Add a provider like Hibernate Validator (RI) to your classpath.-->
-            <dependency>
-                <groupId>org.hibernate.validator</groupId>
-                <artifactId>hibernate-validator</artifactId>
-                <version>6.0.9.Final</version>
-            </dependency>
+        <!--spring-test-->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+            <optional>true</optional>
+            <version>4.12</version>
+        </dependency>
 
-            <!-- javax.validation.ValidationException: HV000183: Unable to initialize 'javax.el.ExpressionFactory'. Check that you have the EL dependencies on the classpath, or use ParameterMessageInterpolator instead-->
-            <dependency>
-                <groupId>org.glassfish</groupId>
-                <artifactId>javax.el</artifactId>
-                <version>3.0.0</version>
-            </dependency>
+        <!--spring-test. jpa-->
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-jpa</artifactId>
+            <scope>test</scope>
+            <optional>true</optional>
+            <version>2.1.0.RELEASE</version>
+        </dependency>
 
-            <!-- jpa dependencies-->
-            <dependency>
-                <groupId>org.springframework.data</groupId>
-                <artifactId>spring-data-jpa</artifactId>
-                <version>2.1.0.RELEASE</version>
-            </dependency>
+        <!--spring-test. jpa-->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-entitymanager</artifactId>
+            <scope>test</scope>
+            <optional>true</optional>
+            <version>5.2.16.Final</version>
+        </dependency>
 
-            <dependency>
-                <groupId>org.hibernate</groupId>
-                <artifactId>hibernate-entitymanager</artifactId>
-                <version>5.2.16.Final</version>
-            </dependency>
+        <!--spring-test. jpa-->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>test</scope>
+            <optional>true</optional>
+            <version>1.4.197</version>
+        </dependency>
 
-            <dependency>
-                <groupId>com.h2database</groupId>
-                <artifactId>h2</artifactId>
-                <version>1.4.197</version>
-            </dependency>
-
-            <!-- logging-->
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-api</artifactId>
-                <version>1.7.29</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-simple</artifactId>
-                <version>1.7.29</version>
-            </dependency>
-
-            <!-- test dependencies-->
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-test</artifactId>
-                <version>5.0.5.RELEASE</version>
-            </dependency>
-
-            <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>4.12</version>
-            </dependency>
-
-        </dependencies>
-
-    </dependencyManagement>
+    </dependencies>
 
     <build>
         <plugins>
@@ -170,70 +157,8 @@
                 <version>3.8.1</version>
             </plugin>
 
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>2.2.1</version>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.9</version>
-                <executions>
-                    <execution>
-                        <id>attach-javadocs</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
         </plugins>
     </build>
 
-    <profiles>
-        <profile>
-            <id>sign-artifacts</id>
-            <activation>
-                <property>
-                    <name>performRelease</name>
-                    <value>true</value>
-                </property>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-gpg-plugin</artifactId>
-                        <version>1.6</version>
-                        <configuration>
-                            <passphrase>${gpg.passphrase}</passphrase>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <id>sign-artifacts</id>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>sign</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 
 </project>
