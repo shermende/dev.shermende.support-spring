@@ -3,13 +3,38 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>spring-parent</artifactId>
+        <artifactId>spring-support-parent</artifactId>
         <groupId>dev.shermende.spring</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>spring-support</artifactId>
+
+    <name>Support</name>
+    <description>Support dependency</description>
+    <url>https://github.com/shermende/dev.shermende.spring.support</url>
+
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Abdysamat Namazbek Uulu</name>
+            <email>developer@shermende.dev</email>
+        </developer>
+    </developers>
+
+    <scm>
+        <url>https://github.com/shermende/dev.shermende.spring.support</url>
+        <connection>scm:git:git://github.com/shermende/dev.shermende.spring.support</connection>
+        <developerConnection>scm:git:git@github.com:shermende/dev.shermende.spring.support</developerConnection>
+    </scm>
+
 
     <dependencies>
 

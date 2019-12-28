@@ -5,9 +5,33 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>dev.shermende.spring</groupId>
-    <artifactId>spring-parent</artifactId>
+    <artifactId>spring-support-parent</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
+
+    <name>Support parent</name>
+    <description>Support parent dependency resolver</description>
+    <url>https://github.com/shermende/dev.shermende.spring.support</url>
+
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Abdysamat Namazbek Uulu</name>
+            <email>developer@shermende.dev</email>
+        </developer>
+    </developers>
+
+    <scm>
+        <url>https://github.com/shermende/dev.shermende.spring.support</url>
+        <connection>scm:git:git://github.com/shermende/dev.shermende.spring.support</connection>
+        <developerConnection>scm:git:git@github.com:shermende/dev.shermende.spring.support</developerConnection>
+    </scm>
 
     <properties>
         <java.version>1.8</java.version>
@@ -27,7 +51,7 @@
 
         <dependencies>
 
-            <!-- spring support dependencies-->
+            <!-- support dependencies-->
             <dependency>
                 <groupId>dev.shermende.spring</groupId>
                 <artifactId>spring-support</artifactId>
@@ -98,6 +122,19 @@
                 <groupId>com.h2database</groupId>
                 <artifactId>h2</artifactId>
                 <version>1.4.197</version>
+            </dependency>
+
+            <!-- logging-->
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>1.7.29</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-simple</artifactId>
+                <version>1.7.29</version>
             </dependency>
 
             <!-- test dependencies-->
