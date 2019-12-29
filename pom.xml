@@ -162,6 +162,7 @@
     <build>
         <plugins>
 
+            <!--Javadoc and Sources Attachments-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -212,6 +213,15 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+
+            <!--Performing a Release Deployment with the Maven Release Plugin-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <configuration>
+                    <goals>deploy</goals>
+                </configuration>
             </plugin>
 
         </plugins>
