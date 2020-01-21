@@ -6,7 +6,6 @@ import org.springframework.validation.ObjectError;
 import org.springframework.validation.Validator;
 
 import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -23,8 +22,7 @@ public class ValidationUtil {
     ) {
         Assert.notNull(t, OBJECT_IS_NULL);
 
-        final Set<ConstraintViolation<T>> violations =
-                Validation.buildDefaultValidatorFactory().getValidator().validate(t);
+        final Set<ConstraintViolation<T>> violations = ValidatorHolder.getInstance().validate(t);
 
         if (!violations.isEmpty())
             return violations.stream()
