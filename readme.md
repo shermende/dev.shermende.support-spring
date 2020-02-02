@@ -55,7 +55,6 @@ public class PetInterceptor implements Interceptor {
 @Service
 public class PetService {
 
-    @Override
     @Intercept
     public void handle(
         @InterceptArgument(PetInterceptor.class) PetPayload payload
