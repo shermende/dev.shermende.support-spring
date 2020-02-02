@@ -1,13 +1,9 @@
-# Support library for spring-boot 2.x.x
+# Method argument interceptor for spring-boot 2.x.x
 
-Support library for spring boot, frequently used classes for creating applications.
+## Attention
 
-## Include
-
-* Interceptor for method arguments (require `spring-boot-starter-aop`)
-* ValidationUtils
-* Factory interfaces
-* Handler interfaces
+* Method argument interceptor (require `spring-boot-starter-aop`)
+* Additionally provides interfaces for handlers and factories
 
 ## Add to spring-boot 2.x.x
 
@@ -15,7 +11,7 @@ Support library for spring boot, frequently used classes for creating applicatio
 <dependency>
   <groupId>dev.shermende</groupId>
   <artifactId>support-spring</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
 </dependency>
 ```
 [Other examples here](https://search.maven.org/artifact/dev.shermende/support-spring)
@@ -59,7 +55,6 @@ public class PetInterceptor implements Interceptor {
 @Service
 public class PetService {
 
-    @Override
     @Intercept
     public void handle(
         @InterceptArgument(PetInterceptor.class) PetPayload payload

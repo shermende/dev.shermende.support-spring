@@ -1,16 +1,18 @@
 package dev.shermende.support.spring;
 
-import dev.shermende.support.spring.component.Payload;
 import dev.shermende.support.spring.component.annotation.InterceptArgument;
 import dev.shermende.support.spring.configuration.TestConfiguration;
-import dev.shermende.support.spring.db.entity.AccessLog;
-import dev.shermende.support.spring.db.entity.SecuredEntity;
-import dev.shermende.support.spring.db.repository.AccessLogRepository;
-import dev.shermende.support.spring.db.repository.SecuredEntityRepository;
+import dev.shermende.support.spring.db.entity.InterceptArgumentEntity;
+import dev.shermende.support.spring.db.entity.InterceptResultEntity;
+import dev.shermende.support.spring.db.entity.Payload;
+import dev.shermende.support.spring.db.repository.InterceptArgumentEntityRepository;
+import dev.shermende.support.spring.db.repository.InterceptResultEntityRepository;
+import dev.shermende.support.spring.db.repository.PayloadRepository;
 import dev.shermende.support.spring.factory.HandlerFactory;
 import dev.shermende.support.spring.factory.impl.AnnotationHandlerFactory;
 import dev.shermende.support.spring.handler.impl.InterceptArgumentHandler;
-import dev.shermende.support.spring.interceptor.LogInterceptor;
+import dev.shermende.support.spring.interceptor.InterceptArgumentInterceptor;
+import dev.shermende.support.spring.interceptor.InterceptResultInterceptor;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,7 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.Optional;
+import javax.persistence.EntityNotFoundException;
 import java.util.UUID;
 
 @RunWith(SpringRunner.class)
@@ -26,16 +28,19 @@ import java.util.UUID;
 public class AppTest {
 
     @Autowired
-    private AccessLogRepository accessLogRepository;
-
-    @Autowired
-    private SecuredEntityRepository securedEntityRepository;
+    private HandlerFactory factory;
 
     @Autowired
     private AnnotationHandlerFactory annotationHandlerFactory;
 
     @Autowired
-    private HandlerFactory factory;
+    private PayloadRepository payloadRepository;
+
+    @Autowired
+    private InterceptArgumentEntityRepository interceptArgumentEntityRepository;
+
+    @Autowired
+    private InterceptResultEntityRepository interceptResultEntityRepository;
 
     /**
      * AnnotationHandlerFactory keys test
@@ -59,7 +64,7 @@ public class AppTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void factoryWrongKeyException() {
-        factory.getInstance("wrongKey").handle(new Payload());
+        factory.getInstance(HandlerFactory.WRONG_KEY).handle(new Payload());
     }
 
     /**
@@ -67,35 +72,40 @@ public class AppTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void interceptorWrongSupportException() {
-        factory.getInstance("interceptWrongSupport").handle(new Payload());
+        factory.getInstance(HandlerFactory.WRONG_SUPPORT).handle(new Payload());
     }
 
     /**
-     * validate interceptor
+     * validate exception interceptor
      */
     @Test(expected = IllegalArgumentException.class)
     public void interceptorValidationException() {
-        factory.getInstance("interceptValidate").handle(new Payload());
+        factory.getInstance(HandlerFactory.VALIDATE).handle(new Payload());
     }
 
     /**
-     * access-control interceptor
+     * ok
      */
     @Test
-    public void okIntercept() {
-        final Payload payload = new Payload().setId(99L).setUuid(UUID.randomUUID().toString());
-        factory.getInstance("intercept").handle(payload);
+    public void ok() {
+        final Payload data = new Payload().setUuid(UUID.randomUUID().toString());
+        factory.getInstance(HandlerFactory.INTERCEPT).handle(data);
 
-        Optional<AccessLog> log = accessLogRepository.findFirstByOrderByIdDesc();
-        Optional<SecuredEntity> houston = securedEntityRepository.findFirstByOrderByIdDesc();
+        final Payload payload = payloadRepository
+                .findFirstByOrderById().orElseThrow(EntityNotFoundException::new);
+        final InterceptArgumentEntity interceptArgument = interceptArgumentEntityRepository
+                .findFirstByOrderById().orElseThrow(EntityNotFoundException::new);
+        final InterceptResultEntity interceptResult = interceptResultEntityRepository
+                .findFirstByOrderById().orElseThrow(EntityNotFoundException::new);
 
-        Assert.assertTrue(log.isPresent());
-        Assert.assertEquals(payload.getId(), log.orElseThrow(RuntimeException::new).getViewedId());
-        Assert.assertEquals(LogInterceptor.class.getName(), log.orElseThrow(RuntimeException::new).getInterceptor());
-        Assert.assertEquals(Payload.class.getName(), log.orElseThrow(RuntimeException::new).getClassName());
+        Assert.assertEquals(data.getId(), payload.getId());
+        Assert.assertEquals(data.getUuid(), payload.getUuid());
 
-        Assert.assertTrue(houston.isPresent());
-        Assert.assertEquals(payload.getUuid(), houston.orElseThrow(RuntimeException::new).getUuid());
+        Assert.assertEquals(Payload.class.getName(), interceptArgument.getObject());
+        Assert.assertEquals(InterceptArgumentInterceptor.class.getName(), interceptArgument.getInterceptor());
+
+        Assert.assertEquals(Payload.class.getName(), interceptResult.getObject());
+        Assert.assertEquals(InterceptResultInterceptor.class.getName(), interceptResult.getInterceptor());
     }
 
 }

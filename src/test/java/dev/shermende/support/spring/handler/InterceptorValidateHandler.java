@@ -1,20 +1,20 @@
 package dev.shermende.support.spring.handler;
 
-import dev.shermende.support.spring.component.Payload;
 import dev.shermende.support.spring.component.annotation.Intercept;
 import dev.shermende.support.spring.component.annotation.InterceptArgument;
+import dev.shermende.support.spring.db.entity.Payload;
 import dev.shermende.support.spring.interceptor.ValidateInterceptor;
 import org.springframework.stereotype.Component;
 
 @Component
-public class InterceptorValidateHandler implements NonReturnHandler<Payload> {
+public class InterceptorValidateHandler implements ReturnHandler<Payload, Payload> {
 
     @Override
     @Intercept
-    public void handle(
+    public Payload handle(
             @InterceptArgument(ValidateInterceptor.class) Payload payload
     ) {
-        // exception in interceptor
+        return payload; // exception in interceptor
     }
 
 }

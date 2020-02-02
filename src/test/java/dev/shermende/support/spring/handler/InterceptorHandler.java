@@ -1,30 +1,32 @@
 package dev.shermende.support.spring.handler;
 
-import dev.shermende.support.spring.component.Payload;
 import dev.shermende.support.spring.component.annotation.Intercept;
 import dev.shermende.support.spring.component.annotation.InterceptArgument;
-import dev.shermende.support.spring.db.entity.SecuredEntity;
-import dev.shermende.support.spring.db.repository.SecuredEntityRepository;
-import dev.shermende.support.spring.interceptor.LogInterceptor;
+import dev.shermende.support.spring.component.annotation.InterceptResult;
+import dev.shermende.support.spring.db.entity.Payload;
+import dev.shermende.support.spring.db.repository.PayloadRepository;
+import dev.shermende.support.spring.interceptor.InterceptArgumentInterceptor;
+import dev.shermende.support.spring.interceptor.InterceptResultInterceptor;
 import org.springframework.stereotype.Component;
 
 @Component
-public class InterceptorHandler implements NonReturnHandler<Payload> {
+public class InterceptorHandler implements ReturnHandler<Payload, Payload> {
 
-    private final SecuredEntityRepository repository;
+    private final PayloadRepository repository;
 
     public InterceptorHandler(
-            SecuredEntityRepository repository
+            PayloadRepository repository
     ) {
         this.repository = repository;
     }
 
     @Override
     @Intercept
-    public void handle(
-             @InterceptArgument(LogInterceptor.class) Payload s
+    @InterceptResult(InterceptResultInterceptor.class)
+    public Payload handle(
+            @InterceptArgument(InterceptArgumentInterceptor.class) Payload payload
     ) {
-        repository.save(new SecuredEntity().setUuid(s.getUuid()));
+        return repository.save(payload);
     }
 
 }

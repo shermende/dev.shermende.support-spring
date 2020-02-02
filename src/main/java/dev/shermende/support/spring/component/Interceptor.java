@@ -10,7 +10,8 @@ public interface Interceptor {
             Object o
     ) {
         if (!supports(o.getClass()))
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException(
+                    String.format("Invalid target for Interceptor %s", o.getClass().getName()));
 
         intercept(o);
     }

@@ -2,26 +2,26 @@ package dev.shermende.support.spring.configuration;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.util.Properties;
 
-@PropertySource("/application.properties")
-@ComponentScan("dev.shermende.support.spring")
 @Configuration
 @EnableInterceptor
-@EnableAspectJAutoProxy(proxyTargetClass = true)
-@EnableTransactionManagement
 @EnableJpaRepositories(basePackages = "dev.shermende.support.spring.db.repository")
+@PropertySource("/application.properties")
+@ComponentScan("dev.shermende.support.spring")
 public class TestConfiguration {
     private static final String ENTITIES = "dev.shermende.support.spring.db.entity";
 
