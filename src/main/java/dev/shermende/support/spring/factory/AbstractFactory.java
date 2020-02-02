@@ -8,8 +8,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public abstract class AbstractFactory<K, C> implements Factory<K, C> {
-    private static final String KEY_IS_NULL = "Key is null";
     private static final String KEY_NOT_FOUND = "Key '%s' not found";
+    private static final String KEY_IS_NULL = "Key is null";
     private static final String CLASS_IS_NULL = "Class is null";
 
     private final Map<K, Class<? extends C>> registry = new HashMap<>();

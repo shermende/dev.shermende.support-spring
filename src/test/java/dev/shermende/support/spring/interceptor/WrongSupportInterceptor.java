@@ -17,7 +17,7 @@ public class WrongSupportInterceptor implements Interceptor {
     public void intercept(
             Object o
     ) {
-        // exception in support step check
+        // exception before this step
     }
 
 }

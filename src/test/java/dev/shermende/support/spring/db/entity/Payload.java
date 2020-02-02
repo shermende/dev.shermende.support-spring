@@ -1,14 +1,16 @@
-package dev.shermende.support.spring.component;
+package dev.shermende.support.spring.db.entity;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
+@Entity
 public class Payload {
 
-    @NotNull
+    @Id
+    @GeneratedValue
     private Long id;
 
-    @NotEmpty
     private String uuid;
 
     public Long getId() {
