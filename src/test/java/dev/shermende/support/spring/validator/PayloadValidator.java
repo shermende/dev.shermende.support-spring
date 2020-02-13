@@ -10,7 +10,7 @@ public class PayloadValidator implements Validator {
 
     @Override
     public boolean supports(
-            Class<?> aClass
+        Class<?> aClass
     ) {
         return Payload.class.isAssignableFrom(aClass);
     }

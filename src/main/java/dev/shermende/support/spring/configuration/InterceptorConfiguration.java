@@ -10,9 +10,9 @@ import java.util.logging.Logger;
 @Configuration
 @EnableAspectJAutoProxy(proxyTargetClass = true)
 @ComponentScan({
-        "dev.shermende.support.spring.aop",
-        "dev.shermende.support.spring.handler",
-        "dev.shermende.support.spring.factory",
+    "dev.shermende.support.spring.aop",
+    "dev.shermende.support.spring.handler",
+    "dev.shermende.support.spring.factory",
 })
 public class InterceptorConfiguration implements InitializingBean {
     private static final Logger LOGGER = Logger.getLogger(InterceptorConfiguration.class.getName());

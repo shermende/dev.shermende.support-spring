@@ -56,7 +56,7 @@ public class AppTest {
     @Test
     public void annotationHandlerFactoryValuesTest() {
         Assert.assertTrue(annotationHandlerFactory.getInstance(InterceptArgument.class.getName())
-                .getClass().isAssignableFrom(InterceptArgumentHandler.class));
+            .getClass().isAssignableFrom(InterceptArgumentHandler.class));
     }
 
     /**
@@ -88,15 +88,15 @@ public class AppTest {
      */
     @Test
     public void ok() {
-        final Payload data = new Payload().setUuid(UUID.randomUUID().toString());
+        final Payload data = Payload.builder().uuid(UUID.randomUUID().toString()).build();
         factory.getInstance(HandlerFactory.INTERCEPT).handle(data);
 
         final Payload payload = payloadRepository
-                .findFirstByOrderById().orElseThrow(EntityNotFoundException::new);
+            .findFirstByOrderById().orElseThrow(EntityNotFoundException::new);
         final InterceptArgumentEntity interceptArgument = interceptArgumentEntityRepository
-                .findFirstByOrderById().orElseThrow(EntityNotFoundException::new);
+            .findFirstByOrderById().orElseThrow(EntityNotFoundException::new);
         final InterceptResultEntity interceptResult = interceptResultEntityRepository
-                .findFirstByOrderById().orElseThrow(EntityNotFoundException::new);
+            .findFirstByOrderById().orElseThrow(EntityNotFoundException::new);
 
         Assert.assertEquals(data.getId(), payload.getId());
         Assert.assertEquals(data.getUuid(), payload.getUuid());

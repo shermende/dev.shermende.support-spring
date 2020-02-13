@@ -5,7 +5,7 @@ import org.springframework.beans.factory.BeanFactory;
 public abstract class AbstractEnumFactory<K extends Enum<?>, C> extends AbstractFactory<K, C> {
 
     public AbstractEnumFactory(
-            BeanFactory beanFactory
+        BeanFactory beanFactory
     ) {
         super(beanFactory);
     }

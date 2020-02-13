@@ -16,14 +16,14 @@ public abstract class AbstractFactory<K, C> implements Factory<K, C> {
     private final BeanFactory beanFactory;
 
     public AbstractFactory(
-            BeanFactory beanFactory
+        BeanFactory beanFactory
     ) {
         this.beanFactory = beanFactory;
         this.registration();
     }
 
     public boolean containsKey(
-            K key
+        K key
     ) {
         Assert.notNull(key, KEY_IS_NULL);
 
@@ -31,8 +31,8 @@ public abstract class AbstractFactory<K, C> implements Factory<K, C> {
     }
 
     public void registry(
-            K key,
-            Class<? extends C> aClass
+        K key,
+        Class<? extends C> aClass
     ) {
         Assert.notNull(key, KEY_IS_NULL);
         Assert.notNull(aClass, CLASS_IS_NULL);
@@ -42,7 +42,7 @@ public abstract class AbstractFactory<K, C> implements Factory<K, C> {
 
 
     public C getInstance(
-            K key
+        K key
     ) {
         Assert.notNull(key, KEY_IS_NULL);
 

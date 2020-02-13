@@ -27,8 +27,8 @@ public class TestConfiguration {
 
     @Bean
     public Properties hibernateProperties(
-            @Value("${hibernate.dialect}") String dialect,
-            @Value("${hibernate.hbm2ddl.auto}") String hbm2ddl
+        @Value("${hibernate.dialect}") String dialect,
+        @Value("${hibernate.hbm2ddl.auto}") String hbm2ddl
     ) {
         final Properties properties = new Properties();
         properties.put("hibernate.dialect", dialect);
@@ -38,8 +38,8 @@ public class TestConfiguration {
 
     @Bean
     public Properties jdbcProperties(
-            @Value("${jdbc.url}") String url,
-            @Value("${jdbc.driverClassName}") String driverClassName
+        @Value("${jdbc.url}") String url,
+        @Value("${jdbc.driverClassName}") String driverClassName
     ) {
         final Properties properties = new Properties();
         properties.put("jdbc.url", url);
@@ -49,16 +49,16 @@ public class TestConfiguration {
 
     @Bean
     public DataSource dataSource(
-            @Value("${jdbc.url}") String url,
-            @Qualifier("jdbcProperties") Properties properties
+        @Value("${jdbc.url}") String url,
+        @Qualifier("jdbcProperties") Properties properties
     ) {
         return new DriverManagerDataSource(url, properties);
     }
 
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(
-            DataSource dataSource,
-            @Qualifier("hibernateProperties") Properties hibernateProperties
+        DataSource dataSource,
+        @Qualifier("hibernateProperties") Properties hibernateProperties
     ) {
         final LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSource);
@@ -70,7 +70,7 @@ public class TestConfiguration {
 
     @Bean
     public PlatformTransactionManager transactionManager(
-            EntityManagerFactory entityManagerFactory
+        EntityManagerFactory entityManagerFactory
     ) {
         return new JpaTransactionManager(entityManagerFactory);
     }

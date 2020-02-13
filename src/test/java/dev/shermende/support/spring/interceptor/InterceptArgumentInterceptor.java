@@ -1,8 +1,8 @@
 package dev.shermende.support.spring.interceptor;
 
 import dev.shermende.support.spring.component.Interceptor;
-import dev.shermende.support.spring.db.entity.Payload;
 import dev.shermende.support.spring.db.entity.InterceptArgumentEntity;
+import dev.shermende.support.spring.db.entity.Payload;
 import dev.shermende.support.spring.db.repository.InterceptArgumentEntityRepository;
 import org.springframework.stereotype.Component;
 
@@ -12,26 +12,27 @@ public class InterceptArgumentInterceptor implements Interceptor {
     private final InterceptArgumentEntityRepository interceptArgumentEntityRepository;
 
     public InterceptArgumentInterceptor(
-            InterceptArgumentEntityRepository interceptArgumentEntityRepository
+        InterceptArgumentEntityRepository interceptArgumentEntityRepository
     ) {
         this.interceptArgumentEntityRepository = interceptArgumentEntityRepository;
     }
 
     @Override
     public boolean supports(
-            Class<?> aClass
+        Class<?> aClass
     ) {
         return Payload.class.isAssignableFrom(aClass);
     }
 
     @Override
     public void intercept(
-            Object payload
+        Object payload
     ) {
         interceptArgumentEntityRepository.save(
-                new InterceptArgumentEntity()
-                        .setInterceptor(getClass().getName())
-                        .setObject(payload.getClass().getName())
+            InterceptArgumentEntity.builder()
+                .interceptor(getClass().getName())
+                .object(payload.getClass().getName())
+                .build()
         );
     }
 

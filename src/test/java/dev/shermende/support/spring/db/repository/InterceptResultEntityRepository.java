@@ -1,6 +1,5 @@
 package dev.shermende.support.spring.db.repository;
 
-import dev.shermende.support.spring.db.entity.InterceptArgumentEntity;
 import dev.shermende.support.spring.db.entity.InterceptResultEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 

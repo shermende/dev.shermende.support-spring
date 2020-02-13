@@ -12,7 +12,7 @@ public class InterceptorValidateHandler implements ReturnHandler<Payload, Payloa
     @Override
     @Intercept
     public Payload handle(
-            @InterceptArgument(ValidateInterceptor.class) Payload payload
+        @InterceptArgument(ValidateInterceptor.class) Payload payload
     ) {
         return payload; // exception in interceptor
     }

@@ -12,26 +12,27 @@ public class InterceptResultInterceptor implements Interceptor {
     private final InterceptResultEntityRepository interceptResultEntityRepository;
 
     public InterceptResultInterceptor(
-            InterceptResultEntityRepository interceptResultEntityRepository
+        InterceptResultEntityRepository interceptResultEntityRepository
     ) {
         this.interceptResultEntityRepository = interceptResultEntityRepository;
     }
 
     @Override
     public boolean supports(
-            Class<?> aClass
+        Class<?> aClass
     ) {
         return Payload.class.isAssignableFrom(aClass);
     }
 
     @Override
     public void intercept(
-            Object payload
+        Object payload
     ) {
         interceptResultEntityRepository.save(
-                new InterceptResultEntity()
-                        .setInterceptor(getClass().getName())
-                        .setObject(payload.getClass().getName())
+            InterceptResultEntity.builder()
+                .interceptor(getClass().getName())
+                .object(payload.getClass().getName())
+                .build()
         );
     }
 

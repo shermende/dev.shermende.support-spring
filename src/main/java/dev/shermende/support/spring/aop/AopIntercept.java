@@ -18,7 +18,7 @@ public class AopIntercept {
     private final AnnotationHandlerFactory factory;
 
     public AopIntercept(
-            AnnotationHandlerFactory factory
+        AnnotationHandlerFactory factory
     ) {
         this.factory = factory;
     }
@@ -38,46 +38,46 @@ public class AopIntercept {
             for (int j = 0; j < annotations[i].length; j++) {
                 final Object arg = joinPoint.getArgs()[i];
                 Optional.of(annotations[i][j])
-                        .filter(this::canBeHandle)
-                        .ifPresent(var -> handle(arg, var));
+                    .filter(this::canBeHandle)
+                    .ifPresent(var -> handle(arg, var));
             }
         }
     }
 
     private Annotation[][] getAnnotations(
-            JoinPoint joinPoint,
-            MethodSignature signature
+        JoinPoint joinPoint,
+        MethodSignature signature
     ) throws NoSuchMethodException {
         return joinPoint.getTarget().getClass()
-                .getMethod(getMethodName(signature), getParameterTypes(signature)).getParameterAnnotations();
+            .getMethod(getMethodName(signature), getParameterTypes(signature)).getParameterAnnotations();
     }
 
 
     private String getMethodName(
-            MethodSignature signature
+        MethodSignature signature
     ) {
         return signature.getMethod().getName();
     }
 
 
     private Class<?>[] getParameterTypes(
-            MethodSignature signature
+        MethodSignature signature
     ) {
         return signature.getMethod().getParameterTypes();
     }
 
     private boolean canBeHandle(
-            Annotation var
+        Annotation var
     ) {
         return factory.containsKey(var.annotationType().getName());
     }
 
     private void handle(
-            Object arg,
-            Annotation annotation
+        Object arg,
+        Annotation annotation
     ) {
         factory.getInstance(annotation.annotationType().getName())
-                .handle(new InterceptArgumentHolder().setAnnotation(annotation).setArgument(arg));
+            .handle(InterceptArgumentHolder.builder().annotation(annotation).argument(arg).build());
     }
 
 }

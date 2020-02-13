@@ -15,14 +15,14 @@ public class InterceptArgumentHandler implements NonReturnHandler<InterceptArgum
     private final BeanFactory beanFactory;
 
     public InterceptArgumentHandler(
-            BeanFactory beanFactory
+        BeanFactory beanFactory
     ) {
         this.beanFactory = beanFactory;
     }
 
     @Override
     public void handle(
-            InterceptArgumentHolder payload
+        InterceptArgumentHolder payload
     ) {
         final Object arg = payload.getArgument();
         final Annotation annotation = payload.getAnnotation();

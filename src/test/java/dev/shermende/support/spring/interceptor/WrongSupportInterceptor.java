@@ -8,14 +8,14 @@ public class WrongSupportInterceptor implements Interceptor {
 
     @Override
     public boolean supports(
-            Class<?> aClass
+        Class<?> aClass
     ) {
         return Exception.class.isAssignableFrom(aClass);
     }
 
     @Override
     public void intercept(
-            Object o
+        Object o
     ) {
         // exception before this step
     }

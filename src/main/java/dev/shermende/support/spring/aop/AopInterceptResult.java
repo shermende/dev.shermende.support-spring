@@ -15,7 +15,7 @@ public class AopInterceptResult {
     private final BeanFactory beanFactory;
 
     public AopInterceptResult(
-            BeanFactory beanFactory
+        BeanFactory beanFactory
     ) {
         this.beanFactory = beanFactory;
     }
@@ -27,7 +27,7 @@ public class AopInterceptResult {
 
 
     private InterceptResult getAnnotation(
-            JoinPoint joinPoint
+        JoinPoint joinPoint
     ) {
         return ((MethodSignature) joinPoint.getSignature()).getMethod().getAnnotation(InterceptResult.class);
     }

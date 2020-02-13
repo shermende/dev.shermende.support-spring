@@ -16,26 +16,26 @@ public class ValidateInterceptor implements Interceptor {
     private final PayloadValidator validator;
 
     public ValidateInterceptor(
-            PayloadValidator validator
+        PayloadValidator validator
     ) {
         this.validator = validator;
     }
 
     @Override
     public boolean supports(
-            Class<?> aClass
+        Class<?> aClass
     ) {
         return Payload.class.isAssignableFrom(aClass);
     }
 
     @Override
     public void intercept(
-            Object o
+        Object o
     ) {
         final BindingResult bindingResult = ValidationUtil.validate(validator, o);
         if (bindingResult.hasErrors())
             throw new IllegalArgumentException(bindingResult.getAllErrors()
-                    .stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.joining()));
+                .stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.joining()));
     }
 
 }

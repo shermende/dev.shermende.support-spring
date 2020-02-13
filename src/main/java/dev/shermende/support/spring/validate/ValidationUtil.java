@@ -10,10 +10,10 @@ public class ValidationUtil {
 
     private ValidationUtil() {
     }
-    
+
     public static <T> BindingResult validate(
-            Validator validator,
-            T t
+        Validator validator,
+        T t
     ) {
         Assert.notNull(t, OBJECT_IS_NULL);
         Assert.notNull(validator, OBJECT_IS_NULL);

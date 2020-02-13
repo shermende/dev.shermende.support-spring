@@ -12,7 +12,7 @@ public class InterceptorWrongSupportHandler implements ReturnHandler<Payload, Pa
     @Override
     @Intercept
     public Payload handle(
-            @InterceptArgument(WrongSupportInterceptor.class) Payload payload
+        @InterceptArgument(WrongSupportInterceptor.class) Payload payload
     ) {
         return payload; // exception in interceptor
     }

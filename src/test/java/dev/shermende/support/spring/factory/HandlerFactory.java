@@ -16,7 +16,7 @@ public class HandlerFactory extends AbstractFactory<String, ReturnHandler<Payloa
     public static final String INTERCEPT = "intercept";
 
     public HandlerFactory(
-            BeanFactory beanFactory
+        BeanFactory beanFactory
     ) {
         super(beanFactory);
     }

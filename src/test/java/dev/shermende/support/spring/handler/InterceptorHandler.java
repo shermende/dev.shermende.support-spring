@@ -15,7 +15,7 @@ public class InterceptorHandler implements ReturnHandler<Payload, Payload> {
     private final PayloadRepository repository;
 
     public InterceptorHandler(
-            PayloadRepository repository
+        PayloadRepository repository
     ) {
         this.repository = repository;
     }
@@ -24,7 +24,7 @@ public class InterceptorHandler implements ReturnHandler<Payload, Payload> {
     @Intercept
     @InterceptResult(InterceptResultInterceptor.class)
     public Payload handle(
-            @InterceptArgument(InterceptArgumentInterceptor.class) Payload payload
+        @InterceptArgument(InterceptArgumentInterceptor.class) Payload payload
     ) {
         return repository.save(payload);
     }
