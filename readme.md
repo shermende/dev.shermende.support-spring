@@ -9,14 +9,14 @@
 <dependency>
   <groupId>dev.shermende</groupId>
   <artifactId>support-spring</artifactId>
-  <version>1.0.1</version>
+  <version>1.0.2</version>
 </dependency>
 ```
 ### Add to gradle project
 
 ```
-groovy: implementation 'dev.shermende:support-spring:1.0.1'
-kotlin: implementation("dev.shermende:support-spring:1.0.1")
+groovy: implementation 'dev.shermende:support-spring:1.0.2'
+kotlin: implementation("dev.shermende:support-spring:1.0.2")
 ```
 [Other examples here](https://search.maven.org/artifact/dev.shermende/support-spring)
 ## Example of usage
