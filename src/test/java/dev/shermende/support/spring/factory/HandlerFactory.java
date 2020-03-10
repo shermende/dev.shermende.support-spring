@@ -5,9 +5,11 @@ import dev.shermende.support.spring.handler.InterceptorHandler;
 import dev.shermende.support.spring.handler.InterceptorValidateHandler;
 import dev.shermende.support.spring.handler.InterceptorWrongSupportHandler;
 import dev.shermende.support.spring.handler.ReturnHandler;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 public class HandlerFactory extends AbstractFactory<String, ReturnHandler<Payload, Payload>> {
     public static final String WRONG_SUPPORT = "interceptWrongSupport";

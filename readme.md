@@ -1,14 +1,9 @@
-# Method argument interceptor for spring-boot 2.x.x
+# Argument interceptor for spring-boot 2.x.x
 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=shermende_dev.shermende.support-spring&metric=alert_status)](https://sonarcloud.io/dashboard?id=shermende_dev.shermende.support-spring)
 [![CircleCI](https://circleci.com/gh/shermende/dev.shermende.support-spring.svg?style=svg)](https://circleci.com/gh/shermende/dev.shermende.support-spring)
 
-## Attention
-
-* Method argument interceptor (require `spring-boot-starter-aop`)
-* Additionally provides interfaces for handlers and factories
-
-## Add to spring-boot 2.x.x
+### Add to maven project
 
 ```
 <dependency>
@@ -17,22 +12,16 @@
   <version>1.0.1</version>
 </dependency>
 ```
+### Add to gradle project
+
+```
+groovy: implementation 'dev.shermende:support-spring:1.0.1'
+kotlin: implementation("dev.shermende:support-spring:1.0.1")
+```
 [Other examples here](https://search.maven.org/artifact/dev.shermende/support-spring)
 ## Example of usage
 
-#### step 1. enable interceptor
-```java
-@EnableInterceptor
-@SpringBootApplication
-public class PetApplication {
-
-    public static void main(String[] args) {
-        SpringApplication.run(PetApplication.class, args);
-    }
-
-}
-```
-#### step 2. create interceptor class
+#### step 1. create interceptor class
 ```java
 @Component
 public class PetInterceptor implements Interceptor {
@@ -53,7 +42,7 @@ public class PetInterceptor implements Interceptor {
 
 }
 ```
-#### step 3. make interception
+#### step 2. make interception
 ```java
 @Service
 public class PetService {
@@ -68,11 +57,6 @@ public class PetService {
 }
 ```
 [More details here](https://github.com/shermende/dev.shermende.pet.dms-backend/blob/develop/src/main/java/dev/shermende/pet/dms/service/unit/impl/UnitServiceImpl.java#L114)
-## Notification
-
-Interception works for external method calls like `@Transactional`, `@Cacheable`.
-
-All used libraries are `provided`, This is made for compatibility with a specific version of spring-boot
  
 ## Troubleshooting
 ##### Problem

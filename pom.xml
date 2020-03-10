@@ -70,6 +70,7 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-aspects</artifactId>
+            <scope>provided</scope>
             <version>5.0.5.RELEASE</version>
         </dependency>
 

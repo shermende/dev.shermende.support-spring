@@ -4,18 +4,16 @@ import dev.shermende.support.spring.component.Interceptor;
 import dev.shermende.support.spring.db.entity.InterceptArgumentEntity;
 import dev.shermende.support.spring.db.entity.Payload;
 import dev.shermende.support.spring.db.repository.InterceptArgumentEntityRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
+@RequiredArgsConstructor
 public class InterceptArgumentInterceptor implements Interceptor {
 
     private final InterceptArgumentEntityRepository interceptArgumentEntityRepository;
-
-    public InterceptArgumentInterceptor(
-        InterceptArgumentEntityRepository interceptArgumentEntityRepository
-    ) {
-        this.interceptArgumentEntityRepository = interceptArgumentEntityRepository;
-    }
 
     @Override
     public boolean supports(
