@@ -18,10 +18,9 @@ import javax.sql.DataSource;
 import java.util.Properties;
 
 @Configuration
-@EnableInterceptor
-@EnableJpaRepositories(basePackages = "dev.shermende.support.spring.db.repository")
+@ComponentScan({"dev.shermende.support.spring"})
+@EnableJpaRepositories({"dev.shermende.support.spring.db.repository"})
 @PropertySource("/application.properties")
-@ComponentScan("dev.shermende.support.spring")
 public class TestConfiguration {
     private static final String ENTITIES = "dev.shermende.support.spring.db.entity";
 

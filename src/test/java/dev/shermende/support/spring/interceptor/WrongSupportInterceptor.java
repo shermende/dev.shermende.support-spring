@@ -1,8 +1,10 @@
 package dev.shermende.support.spring.interceptor;
 
 import dev.shermende.support.spring.component.Interceptor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 public class WrongSupportInterceptor implements Interceptor {
 
@@ -17,7 +19,7 @@ public class WrongSupportInterceptor implements Interceptor {
     public void intercept(
         Object o
     ) {
-        // exception before this step
+        log.debug("unreachable code. exception in supports(...) method.");
     }
 
 }

@@ -2,6 +2,7 @@ package dev.shermende.support.spring.aop;
 
 import dev.shermende.support.spring.component.InterceptArgumentHolder;
 import dev.shermende.support.spring.factory.impl.AnnotationHandlerFactory;
+import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -13,15 +14,10 @@ import java.util.Optional;
 
 @Aspect
 @Component
+@RequiredArgsConstructor
 public class AopIntercept {
 
     private final AnnotationHandlerFactory factory;
-
-    public AopIntercept(
-        AnnotationHandlerFactory factory
-    ) {
-        this.factory = factory;
-    }
 
     @Before("@annotation(dev.shermende.support.spring.component.annotation.Intercept)")
     public void intercept(JoinPoint joinPoint) {
