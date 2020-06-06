@@ -1,4 +1,4 @@
-package dev.shermende.support.spring.component;
+package dev.shermende.support.spring.support;
 
 public interface Interceptor {
 

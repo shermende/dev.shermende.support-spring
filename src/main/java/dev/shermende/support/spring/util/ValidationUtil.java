@@ -1,4 +1,4 @@
-package dev.shermende.support.spring.validate;
+package dev.shermende.support.spring.util;
 
 import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;

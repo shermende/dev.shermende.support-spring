@@ -1,6 +1,6 @@
 package dev.shermende.support.spring.interceptor;
 
-import dev.shermende.support.spring.component.Interceptor;
+import dev.shermende.support.spring.support.Interceptor;
 import dev.shermende.support.spring.db.entity.InterceptResultEntity;
 import dev.shermende.support.spring.db.entity.Payload;
 import dev.shermende.support.spring.db.repository.InterceptResultEntityRepository;
