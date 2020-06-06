@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-dev.shermende.support.spring.configuration.InterceptorAutoConfiguration
+dev.shermende.support.spring.InterceptorAutoConfiguration

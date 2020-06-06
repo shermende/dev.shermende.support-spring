@@ -19,7 +19,7 @@ public class PayloadValidator implements Validator {
 
     @Override
     public void validate(Object o, Errors errors) {
-        errors.reject("");
+        errors.reject("Global error");
     }
 
 }

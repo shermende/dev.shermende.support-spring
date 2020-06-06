@@ -1,6 +1,6 @@
 package dev.shermende.support.spring.interceptor;
 
-import dev.shermende.support.spring.component.Interceptor;
+import dev.shermende.support.spring.support.Interceptor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
