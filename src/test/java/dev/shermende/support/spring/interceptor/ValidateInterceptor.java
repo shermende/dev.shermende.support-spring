@@ -1,15 +1,16 @@
 package dev.shermende.support.spring.interceptor;
 
-import dev.shermende.support.spring.support.Interceptor;
 import dev.shermende.support.spring.db.entity.Payload;
+import dev.shermende.support.spring.support.Interceptor;
 import dev.shermende.support.spring.util.ValidationUtil;
 import dev.shermende.support.spring.validator.PayloadValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.stereotype.Component;
-import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
 
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -30,10 +31,10 @@ public class ValidateInterceptor implements Interceptor {
     public void intercept(
         Object o
     ) {
-        final BindingResult bindingResult = ValidationUtil.validate(validator, o);
-        if (bindingResult.hasErrors())
+        Optional.of(ValidationUtil.validate(validator, o)).filter(Errors::hasErrors).ifPresent(bindingResult -> {
             throw new IllegalStateException(bindingResult.getAllErrors()
                 .stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.joining()));
+        });
     }
 
 }
