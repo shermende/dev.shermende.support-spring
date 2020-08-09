@@ -22,9 +22,6 @@ public class ValidationUtil {
         binder.addValidators(validator);
         binder.validate();
 
-        if (binder.getBindingResult().hasErrors())
-            return binder.getBindingResult();
-
         return binder.getBindingResult();
     }
 
