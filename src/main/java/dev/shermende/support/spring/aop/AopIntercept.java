@@ -22,7 +22,9 @@ public class AopIntercept {
     private final BeanFactory beanFactory;
 
     @Before("@annotation(dev.shermende.support.spring.support.annotation.Intercept)")
-    public void intercept(JoinPoint joinPoint) {
+    public void intercept(
+        JoinPoint joinPoint
+    ) {
         final MethodSignature signature = (MethodSignature) joinPoint.getSignature();
 
         Annotation[][] annotations;
@@ -50,13 +52,11 @@ public class AopIntercept {
             .getMethod(getMethodName(signature), getParameterTypes(signature)).getParameterAnnotations();
     }
 
-
     private String getMethodName(
         MethodSignature signature
     ) {
         return signature.getMethod().getName();
     }
-
 
     private Class<?>[] getParameterTypes(
         MethodSignature signature

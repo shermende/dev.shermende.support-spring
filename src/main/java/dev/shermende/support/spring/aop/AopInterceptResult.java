@@ -19,7 +19,10 @@ public class AopInterceptResult {
     private final BeanFactory beanFactory;
 
     @AfterReturning(pointcut = "@annotation(dev.shermende.support.spring.support.annotation.InterceptResult)", returning = "result")
-    public void interceptResult(JoinPoint joinPoint, Object result) {
+    public void interceptResult(
+        JoinPoint joinPoint,
+        Object result
+    ) {
         beanFactory.getBean(getAnnotation(joinPoint).value()).doIntercept(result);
     }
 

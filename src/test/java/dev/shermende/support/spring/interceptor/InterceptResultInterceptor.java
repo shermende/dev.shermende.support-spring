@@ -1,9 +1,9 @@
 package dev.shermende.support.spring.interceptor;
 
-import dev.shermende.support.spring.support.Interceptor;
 import dev.shermende.support.spring.db.entity.InterceptResultEntity;
 import dev.shermende.support.spring.db.entity.Payload;
 import dev.shermende.support.spring.db.repository.InterceptResultEntityRepository;
+import dev.shermende.support.spring.support.Interceptor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

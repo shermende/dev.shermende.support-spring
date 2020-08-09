@@ -19,7 +19,7 @@ Attention, for new project required `spring-boot-starter-aop` dependency
 groovy: implementation 'dev.shermende:support-spring:1.0.3'
 kotlin: implementation("dev.shermende:support-spring:1.0.3")
 ```
-[Other examples here](https://search.maven.org/artifact/dev.shermende/support-spring)
+[Other examples here](https://mvnrepository.com/artifact/dev.shermende/support-spring)
 ## Example of usage
 
 #### step 1. create interceptor class
