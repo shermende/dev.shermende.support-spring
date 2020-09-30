@@ -28,18 +28,8 @@ jobs:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
-      - name: SONAR_TOKEN
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: echo SERVER_PASSWORD
-      - name: SERVER_PASSWORD
-        env:
-          SERVER_PASSWORD: ${{ secrets.SERVER_PASSWORD }}
-        run: echo SERVER_PASSWORD
       - name: Build and analyze
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SERVER_USERNAME: ${{ secrets.SERVER_USERNAME }}
-          SERVER_PASSWORD: ${{ secrets.SERVER_PASSWORD }}
-        run: ./mvnw -B -s .m2/settings.xml clean verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar deploy
+        run: ./mvnw -B clean verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
