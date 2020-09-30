@@ -28,11 +28,14 @@ jobs:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
-      - name: Echo
+      - name: SONAR_TOKEN
         env:
-          SERVER_USERNAME: ${{ secrets.SERVER_USERNAME }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: echo SERVER_PASSWORD
+      - name: SERVER_PASSWORD
+        env:
           SERVER_PASSWORD: ${{ secrets.SERVER_PASSWORD }}
-        run: echo SERVER_USERNAME && echo $SERVER_PASSWORD
+        run: echo SERVER_PASSWORD
       - name: Build and analyze
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
