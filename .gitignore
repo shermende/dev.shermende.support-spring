@@ -9,6 +9,3 @@ target/
 *.iws
 *.iml
 *.ipr
-
-### Custom ###
-/docker-compose.yml

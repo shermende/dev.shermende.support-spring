@@ -1,15 +1,14 @@
 package dev.shermende.support.spring.util;
 
+import lombok.experimental.UtilityClass;
 import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.DataBinder;
 import org.springframework.validation.Validator;
 
+@UtilityClass
 public class ValidationUtil {
     private static final String OBJECT_IS_NULL = "The object to be validated cannot be null";
-
-    private ValidationUtil() {
-    }
 
     public static <T> BindingResult validate(
         Validator validator,

@@ -1,7 +1,8 @@
 # Argument interceptor for spring-boot 2.x.x
 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=shermende_dev.shermende.support-spring&metric=alert_status)](https://sonarcloud.io/dashboard?id=shermende_dev.shermende.support-spring)
-[![CircleCI](https://circleci.com/gh/shermende/dev.shermende.support-spring.svg?style=svg)](https://circleci.com/gh/shermende/dev.shermende.support-spring)
+
+![Maven pipeline (feature-bugfix)](https://github.com/shermende/dev.shermende.support-spring/workflows/Maven%20pipeline%20(feature-bugfix)/badge.svg)
 
 Attention, for new project required `spring-boot-starter-aop` dependency
 ### Add to maven project
