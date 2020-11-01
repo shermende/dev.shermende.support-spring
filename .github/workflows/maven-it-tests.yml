@@ -1,4 +1,4 @@
-name: Maven pipeline (develop)
+name: Maven pipeline (it tests)
 on:
   push:
     branches: [ master, release/**, hotfix/**, develop ]

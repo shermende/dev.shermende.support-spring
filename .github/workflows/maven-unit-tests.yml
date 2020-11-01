@@ -1,9 +1,7 @@
-name: Maven pipeline (feature-bugfix)
+name: Maven pipeline (unit tests)
 on:
   push:
     branches: [ feature/**, bugfix/** ]
-  pull_request:
-    types: [ opened, synchronize, reopened ]
 jobs:
   build:
     name: Build and Analyze
