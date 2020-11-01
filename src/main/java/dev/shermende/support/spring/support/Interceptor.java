@@ -1,23 +1,25 @@
 package dev.shermende.support.spring.support;
 
+import java.util.Objects;
+
 public interface Interceptor {
 
     boolean supports(
-            Class<?> aClass
+        Class<?> aClass
     );
 
     default void doIntercept(
-            Object o
+        Object argument
     ) {
-        if (!supports(o.getClass()))
+        if (Objects.nonNull(argument) && !supports(argument.getClass()))
             throw new IllegalArgumentException(
-                    String.format("Invalid target for Interceptor %s", o.getClass().getName()));
+                String.format("Invalid target for Interceptor %s", argument.getClass().getName()));
 
-        intercept(o);
+        intercept(argument);
     }
 
     void intercept(
-            Object o
+        Object argument
     );
 
 }

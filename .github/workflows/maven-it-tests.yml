@@ -1,7 +1,7 @@
 name: Maven pipeline (develop)
 on:
   push:
-    branches: [ develop ]
+    branches: [ master, release/**, hotfix/**, develop ]
   pull_request:
     types: [ opened, synchronize, reopened ]
 jobs:
