@@ -1,8 +1,8 @@
 package dev.shermende.support.spring.aop;
 
-import dev.shermende.support.spring.support.Interceptor;
 import dev.shermende.support.spring.support.annotation.InterceptArgument;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -11,35 +11,31 @@ import org.springframework.beans.factory.BeanFactory;
 import org.springframework.stereotype.Component;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Optional;
 
 @Aspect
 @Component
 @RequiredArgsConstructor
-public class AopIntercept {
+public class InterceptAspect {
 
     private final BeanFactory beanFactory;
 
+    @SneakyThrows
     @Before("@annotation(dev.shermende.support.spring.support.annotation.Intercept)")
     public void intercept(
         JoinPoint joinPoint
     ) {
         final MethodSignature signature = (MethodSignature) joinPoint.getSignature();
-
-        Annotation[][] annotations;
-        try {
-            annotations = getAnnotations(joinPoint, signature);
-        } catch (NoSuchMethodException e) {
-            throw new IllegalStateException(e);
-        }
+        final Annotation[][] annotations = getAnnotations(joinPoint, signature);
 
         for (int i = 0; i < annotations.length; i++) {
             for (int j = 0; j < annotations[i].length; j++) {
                 final Object arg = joinPoint.getArgs()[i];
                 Optional.of(annotations[i][j])
                     .filter(annotation -> annotation.annotationType().equals(InterceptArgument.class))
-                    .ifPresent(annotation -> ((Interceptor) beanFactory.getBean(getClass(annotation))).doIntercept(arg));
+                    .map(annotation -> (InterceptArgument) annotation)
+                    .map(interceptArgument -> beanFactory.getBean(interceptArgument.value()))
+                    .ifPresent(interceptor -> interceptor.doIntercept(arg));
             }
         }
     }
@@ -62,16 +58,6 @@ public class AopIntercept {
         MethodSignature signature
     ) {
         return signature.getMethod().getParameterTypes();
-    }
-
-    private Class<?> getClass(Annotation annotation) {
-        Class<?> value;
-        try {
-            value = (Class<?>) annotation.getClass().getDeclaredMethod("value").invoke(annotation, (Object[]) null);
-        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            throw new IllegalStateException(e);
-        }
-        return value;
     }
 
 }
