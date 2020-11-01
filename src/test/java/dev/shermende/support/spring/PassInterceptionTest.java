@@ -19,9 +19,9 @@ import static org.mockito.Mockito.verify;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = InterceptorAutoConfiguration.class)
-public class PassInterceptionIT {
+public class PassInterceptionTest {
     @SpyBean
-    private PassInterceptionIT.InterceptArgumentInterceptor interceptor;
+    private PassInterceptionTest.InterceptArgumentInterceptor interceptor;
 
     @Autowired
     private InterceptorHandler handler;

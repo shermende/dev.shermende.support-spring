@@ -14,7 +14,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = InterceptorAutoConfiguration.class)
-public class SupportWrongInterceptorIT {
+public class SupportWrongInterceptorTest {
 
     @Autowired
     private InterceptorWrongSupportHandler interceptorWrongSupportHandler;
