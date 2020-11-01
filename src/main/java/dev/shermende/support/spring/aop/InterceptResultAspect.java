@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 @Aspect
 @Component
 @RequiredArgsConstructor
-public class AopInterceptResult {
+public class InterceptResultAspect {
 
     private final BeanFactory beanFactory;
 
