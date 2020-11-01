@@ -1,9 +1,7 @@
-name: Maven pipeline (it tests)
+name: Maven pipeline
 on:
   push:
     branches: [ master, release/**, hotfix/**, develop, feature/**, bugfix/** ]
-  pull_request:
-    types: [ opened, synchronize, reopened ]
 jobs:
   build:
     name: Build and Analyze
