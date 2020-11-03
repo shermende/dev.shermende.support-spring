@@ -1,4 +1,4 @@
-package dev.shermende.support.spring.support;
+package dev.shermende.support.spring.utils;
 
 import java.util.Objects;
 

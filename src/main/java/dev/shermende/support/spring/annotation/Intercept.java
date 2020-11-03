@@ -1,4 +1,4 @@
-package dev.shermende.support.spring.support.annotation;
+package dev.shermende.support.spring.annotation;
 
 
 import java.lang.annotation.ElementType;

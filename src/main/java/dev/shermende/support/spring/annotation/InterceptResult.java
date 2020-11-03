@@ -1,7 +1,7 @@
-package dev.shermende.support.spring.support.annotation;
+package dev.shermende.support.spring.annotation;
 
 
-import dev.shermende.support.spring.support.Interceptor;
+import dev.shermende.support.spring.utils.Interceptor;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
