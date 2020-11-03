@@ -1,9 +1,9 @@
 package dev.shermende.support.spring;
 
-import dev.shermende.support.spring.support.Interceptor;
-import dev.shermende.support.spring.support.annotation.Intercept;
-import dev.shermende.support.spring.support.annotation.InterceptArgument;
-import dev.shermende.support.spring.support.annotation.InterceptResult;
+import dev.shermende.support.spring.annotation.Intercept;
+import dev.shermende.support.spring.annotation.InterceptArgument;
+import dev.shermende.support.spring.annotation.InterceptResult;
+import dev.shermende.support.spring.utils.Interceptor;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
