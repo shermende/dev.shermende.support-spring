@@ -9,3 +9,6 @@ target/
 *.iws
 *.iml
 *.ipr
+
+### Custom ###
+.m2/
