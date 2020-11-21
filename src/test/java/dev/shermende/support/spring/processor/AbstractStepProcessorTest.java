@@ -13,6 +13,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Arrays;
+import java.util.Collection;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.then;
@@ -50,10 +51,11 @@ public class AbstractStepProcessorTest {
     public static class StepProcessor extends AbstractStepProcessor<Object, Object> {
         protected StepProcessor(BeanFactory factory) {
             super(factory);
-            this.registry(Arrays.asList(
-                StepOne.class,
-                StepTwo.class
-            ));
+        }
+
+        @Override
+        protected Collection<Class<? extends Step<Object, Object>>> steps() {
+            return Arrays.asList(StepOne.class, StepTwo.class);
         }
     }
 

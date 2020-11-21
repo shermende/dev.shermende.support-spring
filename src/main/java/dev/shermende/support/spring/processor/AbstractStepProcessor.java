@@ -2,9 +2,9 @@ package dev.shermende.support.spring.processor;
 
 import lombok.Getter;
 import org.springframework.beans.factory.BeanFactory;
-import org.springframework.util.Assert;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
@@ -20,14 +20,11 @@ public abstract class AbstractStepProcessor<O, I> {
         BeanFactory factory
     ) {
         this.factory = factory;
+        this.registration();
     }
 
-    protected final void registry(
-        List<Class<? extends Step<O, I>>> steps
-    ) {
-        Assert.notNull(steps, STEPS_IS_NULL);
-        Assert.notEmpty(steps, STEPS_IS_EMPTY);
-        this.steps.addAll(steps);
+    protected final void registration() {
+        this.steps.addAll(steps());
     }
 
     public O execute(
@@ -37,5 +34,7 @@ public abstract class AbstractStepProcessor<O, I> {
         for (Class<? extends Step<O, I>> step : steps) output = factory.getBean(step).execute(input);
         return Objects.requireNonNull(output);
     }
+
+    protected abstract Collection<Class<? extends Step<O, I>>> steps();
 
 }
