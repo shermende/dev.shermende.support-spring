@@ -26,13 +26,13 @@ import static org.mockito.Mockito.times;
 public class AbstractStepProcessorTest {
 
     @SpyBean
-    private AbstractStepProcessorTest.StepOne stepOne;
+    private AbstractStepProcessorTestStepOne stepOne;
 
     @SpyBean
-    private AbstractStepProcessorTest.StepTwo stepTwo;
+    private AbstractStepProcessorTestStepTwo stepTwo;
 
     @Autowired
-    private AbstractStepProcessorTest.StepProcessor stepProcessor;
+    private AbstractStepProcessorTestStepProcessor stepProcessor;
 
     @Test
     public void execute() {
@@ -48,19 +48,19 @@ public class AbstractStepProcessorTest {
     }
 
     @Component
-    public static class StepProcessor extends AbstractStepProcessor<Object, Object> {
-        protected StepProcessor(BeanFactory factory) {
+    public static class AbstractStepProcessorTestStepProcessor extends AbstractStepProcessor<Object, Object> {
+        protected AbstractStepProcessorTestStepProcessor(BeanFactory factory) {
             super(factory);
         }
 
         @Override
         protected Collection<Class<? extends Step<Object, Object>>> steps() {
-            return Arrays.asList(StepOne.class, StepTwo.class);
+            return Arrays.asList(AbstractStepProcessorTestStepOne.class, AbstractStepProcessorTestStepTwo.class);
         }
     }
 
     @Component
-    public static class StepOne implements Step<Object, Object> {
+    public static class AbstractStepProcessorTestStepOne implements Step<Object, Object> {
         @Override
         public Object execute(Object o) {
             return o;
@@ -68,7 +68,7 @@ public class AbstractStepProcessorTest {
     }
 
     @Component
-    public static class StepTwo implements Step<Object, Object> {
+    public static class AbstractStepProcessorTestStepTwo implements Step<Object, Object> {
         @Override
         public Object execute(Object o) {
             return o;

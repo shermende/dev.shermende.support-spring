@@ -24,15 +24,15 @@ import static org.mockito.Mockito.verify;
 public class InterceptAspectTest {
 
     @SpyBean
-    private InterceptAspectTest.InterceptArgumentInterceptor interceptor;
+    private InterceptAspectTestInterceptor interceptor;
 
     @Autowired
-    private InterceptorHandler handler;
+    private InterceptAspectTestComponent component;
 
     @Test
     public void intercept() {
         final Object object = new Object();
-        handler.convert(object);
+        component.convert(object);
         verify(interceptor, times(2)).doIntercept(object);
         verify(interceptor, times(2)).supports(object.getClass());
         verify(interceptor, times(2)).intercept(object);
@@ -54,11 +54,11 @@ public class InterceptAspectTest {
 
     @Slf4j
     @Component
-    public static class InterceptorHandler {
+    public static class InterceptAspectTestComponent {
         @Intercept
-        @InterceptResult(InterceptArgumentInterceptor.class)
+        @InterceptResult(InterceptAspectTestInterceptor.class)
         public Object convert(
-            @InterceptArgument(InterceptArgumentInterceptor.class) Object payload
+            @InterceptArgument(InterceptAspectTestInterceptor.class) Object payload
         ) {
             return payload;
         }
@@ -66,7 +66,7 @@ public class InterceptAspectTest {
 
     @Slf4j
     @Component
-    public static class InterceptArgumentInterceptor implements Interceptor {
+    public static class InterceptAspectTestInterceptor implements Interceptor {
         @Override
         public boolean supports(
             Class<?> aClass

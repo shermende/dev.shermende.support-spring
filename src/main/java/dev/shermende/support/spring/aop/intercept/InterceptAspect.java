@@ -26,8 +26,11 @@ public class InterceptAspect {
     public void intercept(
         JoinPoint joinPoint
     ) {
-        final MethodSignature signature = (MethodSignature) joinPoint.getSignature();
-        final Annotation[][] annotations = getAnnotations(joinPoint, signature);
+        final MethodSignature signature =
+            (MethodSignature) joinPoint.getSignature();
+        final Annotation[][] annotations = joinPoint.getTarget().getClass()
+            .getMethod(signature.getMethod().getName(), signature.getMethod().getParameterTypes())
+            .getParameterAnnotations();
 
         for (int i = 0; i < annotations.length; i++) {
             for (int j = 0; j < annotations[i].length; j++) {
@@ -39,26 +42,6 @@ public class InterceptAspect {
                     .ifPresent(interceptor -> interceptor.doIntercept(arg));
             }
         }
-    }
-
-    private Annotation[][] getAnnotations(
-        JoinPoint joinPoint,
-        MethodSignature signature
-    ) throws NoSuchMethodException {
-        return joinPoint.getTarget().getClass()
-            .getMethod(getMethodName(signature), getParameterTypes(signature)).getParameterAnnotations();
-    }
-
-    private String getMethodName(
-        MethodSignature signature
-    ) {
-        return signature.getMethod().getName();
-    }
-
-    private Class<?>[] getParameterTypes(
-        MethodSignature signature
-    ) {
-        return signature.getMethod().getParameterTypes();
     }
 
 }

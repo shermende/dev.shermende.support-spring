@@ -18,24 +18,24 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = {ProfilingAspectTest.PassInterceptionTestConfiguration.class})
+@ContextConfiguration(classes = {ProfilingAspectTest.ProfilingAspectTestConfiguration.class})
 public class ProfilingAspectTest {
 
     @SpyBean
     private ProfilingAspect aspect;
 
     @Autowired
-    private ProfilingAspectTest.ProfilingHandler handler;
+    private ProfilingAspectTest.ProfilingAspectTestComponent component;
 
     @Test
     public void profiling() {
-        handler.convert(new Object());
+        component.convert(new Object());
         verify(aspect, times(1)).profiling(any());
     }
 
     @ComponentScan
     @EnableAspectJAutoProxy(proxyTargetClass = true)
-    public static class PassInterceptionTestConfiguration {
+    public static class ProfilingAspectTestConfiguration {
         @Bean
         public ProfilingAspect interceptAspect() {
             return new ProfilingAspect();
@@ -44,7 +44,7 @@ public class ProfilingAspectTest {
 
     @Slf4j
     @Component
-    public static class ProfilingHandler {
+    public static class ProfilingAspectTestComponent {
         @Profiling
         public Object convert(
             Object payload

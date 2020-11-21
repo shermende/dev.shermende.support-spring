@@ -14,7 +14,7 @@ public abstract class AbstractFactory<K, C> implements Factory<K, C> {
     private final BeanFactory beanFactory;
     private final Map<K, Class<? extends C>> registry = new ConcurrentHashMap<>();
 
-    public AbstractFactory(
+    protected AbstractFactory(
         BeanFactory beanFactory
     ) {
         this.beanFactory = beanFactory;

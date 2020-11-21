@@ -25,11 +25,11 @@ public class LoggingAspectTest {
     private LoggingAspect aspect;
 
     @Autowired
-    private LoggingAspectTest.LoggingHandler handler;
+    private LoggingAspectTestComponent component;
 
     @Test
     public void logging() {
-        handler.convert(new Object());
+        component.convert(new Object());
         verify(aspect, times(1)).logging(any());
     }
 
@@ -44,7 +44,7 @@ public class LoggingAspectTest {
 
     @Slf4j
     @Component
-    public static class LoggingHandler {
+    public static class LoggingAspectTestComponent {
         @Logging
         public Object convert(
             Object payload

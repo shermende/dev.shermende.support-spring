@@ -15,23 +15,23 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = {InterceptAspectWrongSupportTest.SupportWrongInterceptorTestConfiguration.class})
+@ContextConfiguration(classes = {InterceptAspectWrongSupportTest.InterceptAspectWrongSupportTestConfiguration.class})
 public class InterceptAspectWrongSupportTest {
 
     @Autowired
-    private InterceptorWrongSupportHandler interceptorWrongSupportHandler;
+    private InterceptAspectWrongSupportTestComponent component;
 
     /**
      * wrong support
      */
     @Test(expected = IllegalArgumentException.class)
     public void interceptWrongSupportTest() {
-        interceptorWrongSupportHandler.convert(new Object());
+        component.convert(new Object());
     }
 
     @ComponentScan
     @EnableAspectJAutoProxy(proxyTargetClass = true)
-    public static class SupportWrongInterceptorTestConfiguration {
+    public static class InterceptAspectWrongSupportTestConfiguration {
         @Bean
         public InterceptAspect interceptAspect(BeanFactory factory) {
             return new InterceptAspect(factory);
@@ -45,10 +45,10 @@ public class InterceptAspectWrongSupportTest {
 
     @Slf4j
     @Component
-    public static class InterceptorWrongSupportHandler {
+    public static class InterceptAspectWrongSupportTestComponent {
         @Intercept
         public Object convert(
-            @InterceptArgument(WrongSupportInterceptor.class) Object payload
+            @InterceptArgument(InterceptAspectWrongSupportTestInterceptor.class) Object payload
         ) {
             log.debug("unreachable code. exception in interceptor.");
             return payload;
@@ -57,7 +57,7 @@ public class InterceptAspectWrongSupportTest {
 
     @Slf4j
     @Component
-    public static class WrongSupportInterceptor implements Interceptor {
+    public static class InterceptAspectWrongSupportTestInterceptor implements Interceptor {
         @Override
         public boolean supports(
             Class<?> aClass

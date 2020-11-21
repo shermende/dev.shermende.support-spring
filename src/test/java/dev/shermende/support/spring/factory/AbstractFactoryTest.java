@@ -22,13 +22,13 @@ import static org.mockito.Mockito.times;
 public class AbstractFactoryTest {
 
     @SpyBean
-    private ConverterOne converterOne;
+    private AbstractFactoryTestConverterOne converterOne;
 
     @SpyBean
-    private ConverterTwo converterTwo;
+    private AbstractFactoryTestConverterTwo converterTwo;
 
     @Autowired
-    private ConverterFactory factory;
+    private AbstractFactoryTestFactory factory;
 
     @Test
     public void getInstance() {
@@ -49,7 +49,7 @@ public class AbstractFactoryTest {
     }
 
     @Component
-    public static class ConverterOne implements Converter<Object, Object> {
+    public static class AbstractFactoryTestConverterOne implements Converter<Object, Object> {
         @Override
         public Object convert(Object o) {
             return o;
@@ -57,7 +57,7 @@ public class AbstractFactoryTest {
     }
 
     @Component
-    public static class ConverterTwo implements Converter<Object, Object> {
+    public static class AbstractFactoryTestConverterTwo implements Converter<Object, Object> {
         @Override
         public Object convert(Object o) {
             return o;
@@ -65,15 +65,15 @@ public class AbstractFactoryTest {
     }
 
     @Component
-    public static class ConverterFactory extends AbstractFactory<String, Converter<Object, Object>> {
-        public ConverterFactory(BeanFactory beanFactory) {
+    public static class AbstractFactoryTestFactory extends AbstractFactory<String, Converter<Object, Object>> {
+        public AbstractFactoryTestFactory(BeanFactory beanFactory) {
             super(beanFactory);
         }
 
         @Override
         protected void registration() {
-            this.registry("one", ConverterOne.class);
-            this.registry("two", ConverterTwo.class);
+            this.registry("one", AbstractFactoryTestConverterOne.class);
+            this.registry("two", AbstractFactoryTestConverterTwo.class);
         }
     }
 

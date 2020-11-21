@@ -8,6 +8,8 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
 
+import java.lang.reflect.Method;
+
 /**
  *
  */
@@ -23,11 +25,15 @@ public class ProfilingAspect {
         final Object proceed = proceedingJoinPoint.proceed();
         final long delta = System.currentTimeMillis() - start;
         try {
+            final Class<?> aClass = proceedingJoinPoint.getTarget().getClass();
+            final MethodSignature signature = (MethodSignature) proceedingJoinPoint.getSignature();
+            final Method method = signature.getMethod();
+            final Object[] args = proceedingJoinPoint.getArgs();
             log.debug("[Profiling] [{}#{}] [Duration:{}] [Args:{}] [Result:{}]",
-                proceedingJoinPoint.getTarget().getClass(),
-                ((MethodSignature) proceedingJoinPoint.getSignature()).getMethod(),
+                aClass,
+                method,
                 delta,
-                proceedingJoinPoint.getArgs(),
+                args,
                 proceed
             );
         } catch (Exception e) {
