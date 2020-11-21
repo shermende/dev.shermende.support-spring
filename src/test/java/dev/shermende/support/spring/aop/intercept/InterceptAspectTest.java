@@ -1,33 +1,36 @@
-package dev.shermende.support.spring;
+package dev.shermende.support.spring.aop.intercept;
 
-import dev.shermende.support.spring.annotation.Intercept;
-import dev.shermende.support.spring.annotation.InterceptArgument;
-import dev.shermende.support.spring.annotation.InterceptResult;
-import dev.shermende.support.spring.utils.Interceptor;
+import dev.shermende.support.spring.aop.intercept.annotation.Intercept;
+import dev.shermende.support.spring.aop.intercept.annotation.InterceptArgument;
+import dev.shermende.support.spring.aop.intercept.annotation.InterceptResult;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
-import org.springframework.core.convert.converter.Converter;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.stereotype.Component;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = InterceptorAutoConfiguration.class)
-public class PassInterceptionTest {
+@ContextConfiguration(classes = {InterceptAspectTest.InterceptAspectTestConfiguration.class})
+public class InterceptAspectTest {
+
     @SpyBean
-    private PassInterceptionTest.InterceptArgumentInterceptor interceptor;
+    private InterceptAspectTest.InterceptArgumentInterceptor interceptor;
 
     @Autowired
     private InterceptorHandler handler;
 
     @Test
-    public void interceptorValidationException() {
+    public void intercept() {
         final Object object = new Object();
         handler.convert(object);
         verify(interceptor, times(2)).doIntercept(object);
@@ -35,11 +38,23 @@ public class PassInterceptionTest {
         verify(interceptor, times(2)).intercept(object);
     }
 
+    @ComponentScan
+    @EnableAspectJAutoProxy(proxyTargetClass = true)
+    public static class InterceptAspectTestConfiguration {
+        @Bean
+        public InterceptAspect interceptAspect(BeanFactory factory) {
+            return new InterceptAspect(factory);
+        }
+
+        @Bean
+        public InterceptResultAspect interceptResultAspect(BeanFactory factory) {
+            return new InterceptResultAspect(factory);
+        }
+    }
+
     @Slf4j
     @Component
-    public static class InterceptorHandler implements Converter<Object, Object> {
-
-        @Override
+    public static class InterceptorHandler {
         @Intercept
         @InterceptResult(InterceptArgumentInterceptor.class)
         public Object convert(
@@ -47,13 +62,11 @@ public class PassInterceptionTest {
         ) {
             return payload;
         }
-
     }
 
     @Slf4j
     @Component
     public static class InterceptArgumentInterceptor implements Interceptor {
-
         @Override
         public boolean supports(
             Class<?> aClass
@@ -67,7 +80,5 @@ public class PassInterceptionTest {
         ) {
             log.debug("interceptor working... {}", payload);
         }
-
     }
-
 }

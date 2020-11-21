@@ -1,7 +1,10 @@
-package dev.shermende.support.spring.utils;
+package dev.shermende.support.spring.aop.intercept;
 
 import java.util.Objects;
 
+/**
+ * Interceptor behavior
+ */
 public interface Interceptor {
 
     boolean supports(

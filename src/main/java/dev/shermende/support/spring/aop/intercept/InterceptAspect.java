@@ -1,6 +1,6 @@
-package dev.shermende.support.spring.aop;
+package dev.shermende.support.spring.aop.intercept;
 
-import dev.shermende.support.spring.annotation.InterceptArgument;
+import dev.shermende.support.spring.aop.intercept.annotation.InterceptArgument;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.aspectj.lang.JoinPoint;
@@ -8,20 +8,21 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.BeanFactory;
-import org.springframework.stereotype.Component;
 
 import java.lang.annotation.Annotation;
 import java.util.Optional;
 
+/**
+ *
+ */
 @Aspect
-@Component
 @RequiredArgsConstructor
 public class InterceptAspect {
 
     private final BeanFactory beanFactory;
 
     @SneakyThrows
-    @Before("@annotation(dev.shermende.support.spring.annotation.Intercept)")
+    @Before("@annotation(dev.shermende.support.spring.aop.intercept.annotation.Intercept)")
     public void intercept(
         JoinPoint joinPoint
     ) {

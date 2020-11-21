@@ -1,37 +1,51 @@
-package dev.shermende.support.spring;
+package dev.shermende.support.spring.aop.intercept;
 
-import dev.shermende.support.spring.annotation.Intercept;
-import dev.shermende.support.spring.annotation.InterceptArgument;
-import dev.shermende.support.spring.utils.Interceptor;
+import dev.shermende.support.spring.aop.intercept.annotation.Intercept;
+import dev.shermende.support.spring.aop.intercept.annotation.InterceptArgument;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.core.convert.converter.Converter;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.stereotype.Component;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = InterceptorAutoConfiguration.class)
-public class SupportWrongInterceptorTest {
+@ContextConfiguration(classes = {InterceptAspectWrongSupportTest.SupportWrongInterceptorTestConfiguration.class})
+public class InterceptAspectWrongSupportTest {
 
     @Autowired
     private InterceptorWrongSupportHandler interceptorWrongSupportHandler;
 
     /**
-     * interceptor wrong support
+     * wrong support
      */
     @Test(expected = IllegalArgumentException.class)
-    public void interceptorWrongSupportException() {
+    public void interceptWrongSupportTest() {
         interceptorWrongSupportHandler.convert(new Object());
+    }
+
+    @ComponentScan
+    @EnableAspectJAutoProxy(proxyTargetClass = true)
+    public static class SupportWrongInterceptorTestConfiguration {
+        @Bean
+        public InterceptAspect interceptAspect(BeanFactory factory) {
+            return new InterceptAspect(factory);
+        }
+
+        @Bean
+        public InterceptResultAspect interceptResultAspect(BeanFactory factory) {
+            return new InterceptResultAspect(factory);
+        }
     }
 
     @Slf4j
     @Component
-    public static class InterceptorWrongSupportHandler implements Converter<Object, Object> {
-
-        @Override
+    public static class InterceptorWrongSupportHandler {
         @Intercept
         public Object convert(
             @InterceptArgument(WrongSupportInterceptor.class) Object payload
@@ -39,13 +53,11 @@ public class SupportWrongInterceptorTest {
             log.debug("unreachable code. exception in interceptor.");
             return payload;
         }
-
     }
 
     @Slf4j
     @Component
     public static class WrongSupportInterceptor implements Interceptor {
-
         @Override
         public boolean supports(
             Class<?> aClass
@@ -59,7 +71,5 @@ public class SupportWrongInterceptorTest {
         ) {
             log.debug("unreachable code. exception in supports(...) method.");
         }
-
     }
-
 }

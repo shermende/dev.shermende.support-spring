@@ -1,6 +1,6 @@
-package dev.shermende.support.spring.aop;
+package dev.shermende.support.spring.aop.intercept;
 
-import dev.shermende.support.spring.annotation.InterceptResult;
+import dev.shermende.support.spring.aop.intercept.annotation.InterceptResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
@@ -8,17 +8,18 @@ import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.BeanFactory;
-import org.springframework.stereotype.Component;
 
+/**
+ *
+ */
 @Slf4j
 @Aspect
-@Component
 @RequiredArgsConstructor
 public class InterceptResultAspect {
 
     private final BeanFactory beanFactory;
 
-    @AfterReturning(pointcut = "@annotation(dev.shermende.support.spring.annotation.InterceptResult)", returning = "result")
+    @AfterReturning(pointcut = "@annotation(dev.shermende.support.spring.aop.intercept.annotation.InterceptResult)", returning = "result")
     public void interceptResult(
         JoinPoint joinPoint,
         Object result
