@@ -3,11 +3,13 @@ package dev.shermende.support.spring.aop.intercept;
 import dev.shermende.support.spring.aop.intercept.annotation.InterceptArgument;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.InitializingBean;
 
 import java.lang.annotation.Annotation;
 import java.util.Optional;
@@ -15,9 +17,10 @@ import java.util.Optional;
 /**
  *
  */
+@Slf4j
 @Aspect
 @RequiredArgsConstructor
-public class InterceptAspect {
+public class InterceptAspect implements InitializingBean {
 
     private final BeanFactory beanFactory;
 
@@ -44,4 +47,8 @@ public class InterceptAspect {
         }
     }
 
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        log.warn("Attention!!! @dev.shermende.support.spring.aop.intercept.annotation.Intercept annotation enabled");
+    }
 }

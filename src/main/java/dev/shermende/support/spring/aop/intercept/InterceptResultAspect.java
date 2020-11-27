@@ -8,6 +8,7 @@ import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.InitializingBean;
 
 /**
  *
@@ -15,7 +16,7 @@ import org.springframework.beans.factory.BeanFactory;
 @Slf4j
 @Aspect
 @RequiredArgsConstructor
-public class InterceptResultAspect {
+public class InterceptResultAspect implements InitializingBean {
 
     private final BeanFactory beanFactory;
 
@@ -33,4 +34,8 @@ public class InterceptResultAspect {
         return ((MethodSignature) joinPoint.getSignature()).getMethod().getAnnotation(InterceptResult.class);
     }
 
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        log.warn("Attention!!! @dev.shermende.support.spring.aop.intercept.annotation.InterceptResult annotation enabled");
+    }
 }
