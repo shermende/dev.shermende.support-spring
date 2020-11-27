@@ -27,8 +27,8 @@ public class LoggingAspect {
             final Method method = signature.getMethod();
             final Object[] args = proceedingJoinPoint.getArgs();
             log.debug("[Logging before] [{}#{}] [Args:{}]",
-                aClass,
-                method,
+                aClass.getSimpleName(),
+                method.getName(),
                 args
             );
         } catch (Exception e) {
@@ -41,8 +41,8 @@ public class LoggingAspect {
             final Method method = signature.getMethod();
             final Object[] args = proceedingJoinPoint.getArgs();
             log.debug("[Logging after] [{}#{}] [Args:{}] [Result:{}]",
-                aClass,
-                method,
+                aClass.getSimpleName(),
+                method.getName(),
                 args,
                 proceed
             );

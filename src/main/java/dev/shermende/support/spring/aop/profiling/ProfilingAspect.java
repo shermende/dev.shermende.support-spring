@@ -28,13 +28,10 @@ public class ProfilingAspect {
             final Class<?> aClass = proceedingJoinPoint.getTarget().getClass();
             final MethodSignature signature = (MethodSignature) proceedingJoinPoint.getSignature();
             final Method method = signature.getMethod();
-            final Object[] args = proceedingJoinPoint.getArgs();
-            log.debug("[Profiling] [{}#{}] [Duration:{}] [Args:{}] [Result:{}]",
-                aClass,
-                method,
-                delta,
-                args,
-                proceed
+            log.debug("[Profiling] [{}#{}] [Duration:{}]",
+                aClass.getSimpleName(),
+                method.getName(),
+                delta
             );
         } catch (Exception e) {
             log.error(e.getMessage());
