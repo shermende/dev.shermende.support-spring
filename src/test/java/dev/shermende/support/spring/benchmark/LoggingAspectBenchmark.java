@@ -44,7 +44,7 @@ public class LoggingAspectBenchmark {
     public static class LoggingAspectBenchmarkConfiguration {
         @Bean
         public LoggingAspect loggingAspect() {
-            return new LoggingAspect();
+            return new LoggingAspect(true);
         }
     }
 

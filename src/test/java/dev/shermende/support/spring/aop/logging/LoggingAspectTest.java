@@ -2,6 +2,7 @@ package dev.shermende.support.spring.aop.logging;
 
 import dev.shermende.support.spring.aop.logging.annotation.Logging;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,12 +34,19 @@ public class LoggingAspectTest {
         verify(aspect, times(1)).logging(any());
     }
 
+    @Test
+    public void toggle() {
+        Assert.assertTrue(aspect.isEnabled());
+        Assert.assertFalse(aspect.toggle());
+        Assert.assertFalse(aspect.isEnabled());
+    }
+
     @ComponentScan
     @EnableAspectJAutoProxy(proxyTargetClass = true)
     public static class LoggingAspectTestConfiguration {
         @Bean
         public LoggingAspect interceptAspect() {
-            return new LoggingAspect();
+            return new LoggingAspect(true);
         }
     }
 

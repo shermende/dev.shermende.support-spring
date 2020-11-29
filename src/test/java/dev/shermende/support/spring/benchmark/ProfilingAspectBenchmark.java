@@ -44,7 +44,7 @@ public class ProfilingAspectBenchmark {
     public static class ProfilingAspectTestConfiguration {
         @Bean
         public ProfilingAspect profilingAspect() {
-            return new ProfilingAspect();
+            return new ProfilingAspect(true);
         }
     }
 
