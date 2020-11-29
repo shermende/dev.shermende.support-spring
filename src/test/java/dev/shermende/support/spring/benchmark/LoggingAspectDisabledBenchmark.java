@@ -33,7 +33,7 @@ import java.util.stream.IntStream;
 @State(Scope.Benchmark)
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.MICROSECONDS)
-public class LoggingAspectBenchmark {
+public class LoggingAspectDisabledBenchmark {
 
     private ConfigurableApplicationContext context;
 
@@ -52,7 +52,7 @@ public class LoggingAspectBenchmark {
     public static class LoggingAspectBenchmarkConfiguration {
         @Bean
         public LoggingAspect loggingAspect() {
-            return new LoggingAspect(true);
+            return new LoggingAspect(false);
         }
     }
 

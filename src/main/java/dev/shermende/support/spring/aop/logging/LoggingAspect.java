@@ -10,7 +10,6 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.jmx.export.annotation.ManagedResource;
 
-import java.lang.reflect.Method;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -34,28 +33,20 @@ public class LoggingAspect implements InitializingBean {
         if (!enabled.get()) return proceedingJoinPoint.proceed();
         // logging if enabled
         try {
-            final Class<?> aClass = proceedingJoinPoint.getTarget().getClass();
-            final MethodSignature signature = (MethodSignature) proceedingJoinPoint.getSignature();
-            final Method method = signature.getMethod();
-            final Object[] args = proceedingJoinPoint.getArgs();
             log.debug("[Logging before] [{}#{}] [Args:{}]",
-                aClass.getSimpleName(),
-                method.getName(),
-                args
+                proceedingJoinPoint.getTarget().getClass().getSimpleName(),
+                ((MethodSignature) proceedingJoinPoint.getSignature()).getMethod().getName(),
+                proceedingJoinPoint.getArgs()
             );
         } catch (Exception e) {
             log.error(e.getMessage());
         }
         final Object proceed = proceedingJoinPoint.proceed();
         try {
-            final Class<?> aClass = proceedingJoinPoint.getTarget().getClass();
-            final MethodSignature signature = (MethodSignature) proceedingJoinPoint.getSignature();
-            final Method method = signature.getMethod();
-            final Object[] args = proceedingJoinPoint.getArgs();
             log.debug("[Logging after] [{}#{}] [Args:{}] [Result:{}]",
-                aClass.getSimpleName(),
-                method.getName(),
-                args,
+                proceedingJoinPoint.getTarget().getClass().getSimpleName(),
+                ((MethodSignature) proceedingJoinPoint.getSignature()).getMethod().getName(),
+                proceedingJoinPoint.getArgs(),
                 proceed
             );
         } catch (Exception e) {

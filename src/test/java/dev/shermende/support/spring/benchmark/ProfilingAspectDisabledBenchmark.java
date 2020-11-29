@@ -1,7 +1,7 @@
 package dev.shermende.support.spring.benchmark;
 
-import dev.shermende.support.spring.aop.logging.LoggingAspect;
-import dev.shermende.support.spring.aop.logging.annotation.Logging;
+import dev.shermende.support.spring.aop.profiling.ProfilingAspect;
+import dev.shermende.support.spring.aop.profiling.annotation.Profiling;
 import lombok.extern.slf4j.Slf4j;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
@@ -33,32 +33,32 @@ import java.util.stream.IntStream;
 @State(Scope.Benchmark)
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.MICROSECONDS)
-public class LoggingAspectBenchmark {
+public class ProfilingAspectDisabledBenchmark {
 
     private ConfigurableApplicationContext context;
 
     @Setup(Level.Trial)
     public synchronized void benchmarkSetup() {
-        context = SpringApplication.run(LoggingAspectBenchmarkConfiguration.class);
+        context = SpringApplication.run(ProfilingAspectTestConfiguration.class);
     }
 
     @Benchmark
     public void benchmark() {
-        context.getBean(LoggingAspectBenchmarkComponent.class).action();
+        context.getBean(ProfilingAspectTestComponent.class).action();
     }
 
     @ComponentScan
     @EnableAspectJAutoProxy(proxyTargetClass = true)
-    public static class LoggingAspectBenchmarkConfiguration {
+    public static class ProfilingAspectTestConfiguration {
         @Bean
-        public LoggingAspect loggingAspect() {
-            return new LoggingAspect(true);
+        public ProfilingAspect profilingAspect() {
+            return new ProfilingAspect(false);
         }
     }
 
     @Component
-    public static class LoggingAspectBenchmarkComponent {
-        @Logging
+    public static class ProfilingAspectTestComponent {
+        @Profiling
         void action() {
             IntStream.range(0, 10000).forEach(i -> {
                 double res = i / 10000.0;
