@@ -1,5 +1,6 @@
 package dev.shermende.support.spring.aop.profiling;
 
+import dev.shermende.support.spring.jmx.JmxControl;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -19,9 +20,14 @@ import java.lang.reflect.Method;
 @RequiredArgsConstructor
 public class ProfilingAspect implements InitializingBean {
 
+    private final JmxControl jmxControl;
+
     @SneakyThrows
     @Around("@annotation(dev.shermende.support.spring.aop.profiling.annotation.Profiling)")
     public Object profiling(ProceedingJoinPoint proceedingJoinPoint) {
+        // do nothing if disabled
+        if (!jmxControl.isEnabled()) return proceedingJoinPoint.proceed();
+        // logging if enabled
         final long start = System.currentTimeMillis();
         final Object proceed = proceedingJoinPoint.proceed();
         final long delta = System.currentTimeMillis() - start;

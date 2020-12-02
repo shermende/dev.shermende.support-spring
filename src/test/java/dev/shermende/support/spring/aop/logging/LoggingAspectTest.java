@@ -1,6 +1,8 @@
 package dev.shermende.support.spring.aop.logging;
 
 import dev.shermende.support.spring.aop.logging.annotation.Logging;
+import dev.shermende.support.spring.jmx.JmxControl;
+import dev.shermende.support.spring.jmx.impl.ToggleJmxControlImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,8 +39,13 @@ public class LoggingAspectTest {
     @EnableAspectJAutoProxy(proxyTargetClass = true)
     public static class LoggingAspectTestConfiguration {
         @Bean
-        public LoggingAspect interceptAspect() {
-            return new LoggingAspect();
+        public JmxControl jmxControl() {
+            return new ToggleJmxControlImpl(true);
+        }
+
+        @Bean
+        public LoggingAspect interceptAspect(JmxControl jmxControl) {
+            return new LoggingAspect(jmxControl);
         }
     }
 

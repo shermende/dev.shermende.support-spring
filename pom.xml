@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>dev.shermende</groupId>
@@ -43,17 +44,21 @@
         <spring-boot.version>2.1.0.RELEASE</spring-boot.version>
         <springframework.version>5.1.0.RELEASE</springframework.version>
         <logback-classic.version>1.2.3</logback-classic.version>
+        <jmh-core.version>1.26</jmh-core.version>
         <lombok.version>1.18.12</lombok.version>
 
         <!-- plugin versions -->
+        <exec-maven-plugin.version>3.0.0</exec-maven-plugin.version>
         <jacoco-maven-plugin.version>0.8.3</jacoco-maven-plugin.version>
         <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
-        <maven-failsafe-plugin.version>3.0.0-M5</maven-failsafe-plugin.version>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <maven-source-plugin.version>3.2.0</maven-source-plugin.version>
         <maven-javadoc-plugin.version>3.2.0</maven-javadoc-plugin.version>
         <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
         <maven-gpg-plugin.version>1.5</maven-gpg-plugin.version>
+
+        <!-- exec-maven-plugin skip -->
+        <exec.skip>true</exec.skip>
 
         <!-- sonar-cloud -->
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
@@ -109,16 +114,16 @@
         <dependency>
             <groupId>org.openjdk.jmh</groupId>
             <artifactId>jmh-core</artifactId>
-            <version>1.26</version>
-            <scope>provided</scope>
+            <version>${jmh-core.version}</version>
+            <scope>test</scope>
         </dependency>
 
         <!--jmh benchmark-->
         <dependency>
             <groupId>org.openjdk.jmh</groupId>
             <artifactId>jmh-generator-annprocess</artifactId>
-            <version>1.26</version>
-            <scope>provided</scope>
+            <version>${jmh-core.version}</version>
+            <scope>test</scope>
         </dependency>
 
         <!--test-->
@@ -142,6 +147,32 @@
                         <include>**/*Test.java</include>
                     </includes>
                 </configuration>
+            </plugin>
+
+            <!-- JHM benchmark runner -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>${exec-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>run-benchmarks</id>
+                        <phase>integration-test</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <classpathScope>test</classpathScope>
+                            <executable>java</executable>
+                            <arguments>
+                                <argument>-classpath</argument>
+                                <classpath/>
+                                <argument>org.openjdk.jmh.Main</argument>
+                                <argument>.*</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
 
             <!-- Code coverage for sonar-cloud -->
