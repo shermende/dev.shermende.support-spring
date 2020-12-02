@@ -2,6 +2,8 @@ package dev.shermende.support.spring.benchmark;
 
 import dev.shermende.support.spring.aop.logging.LoggingAspect;
 import dev.shermende.support.spring.aop.logging.annotation.Logging;
+import dev.shermende.support.spring.jmx.JmxControl;
+import dev.shermende.support.spring.jmx.impl.ToggleJmxControlImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
@@ -51,8 +53,12 @@ public class LoggingAspectBenchmark {
     @EnableAspectJAutoProxy(proxyTargetClass = true)
     public static class LoggingAspectBenchmarkConfiguration {
         @Bean
-        public LoggingAspect loggingAspect() {
-            return new LoggingAspect(true);
+        public JmxControl jmxControl() {
+            return new ToggleJmxControlImpl(true);
+        }
+        @Bean
+        public LoggingAspect loggingAspect(JmxControl jmxControl) {
+            return new LoggingAspect(jmxControl);
         }
     }
 

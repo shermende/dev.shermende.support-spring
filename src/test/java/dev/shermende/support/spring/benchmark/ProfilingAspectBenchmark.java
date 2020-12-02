@@ -2,6 +2,8 @@ package dev.shermende.support.spring.benchmark;
 
 import dev.shermende.support.spring.aop.profiling.ProfilingAspect;
 import dev.shermende.support.spring.aop.profiling.annotation.Profiling;
+import dev.shermende.support.spring.jmx.JmxControl;
+import dev.shermende.support.spring.jmx.impl.ToggleJmxControlImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
@@ -51,8 +53,12 @@ public class ProfilingAspectBenchmark {
     @EnableAspectJAutoProxy(proxyTargetClass = true)
     public static class ProfilingAspectTestConfiguration {
         @Bean
-        public ProfilingAspect profilingAspect() {
-            return new ProfilingAspect(true);
+        public JmxControl jmxControl() {
+            return new ToggleJmxControlImpl(true);
+        }
+        @Bean
+        public ProfilingAspect profilingAspect(JmxControl jmxControl) {
+            return new ProfilingAspect(jmxControl);
         }
     }
 
