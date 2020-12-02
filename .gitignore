@@ -11,4 +11,4 @@ target/
 *.ipr
 
 ### Custom ###
-.m2/
+.m2-release/

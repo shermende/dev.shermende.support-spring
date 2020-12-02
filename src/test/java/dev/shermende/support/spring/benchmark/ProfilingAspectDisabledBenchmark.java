@@ -1,7 +1,9 @@
 package dev.shermende.support.spring.benchmark;
 
-import dev.shermende.support.spring.aop.empty.EmptyAspect;
-import dev.shermende.support.spring.aop.logging.annotation.Logging;
+import dev.shermende.support.spring.aop.profiling.ProfilingAspect;
+import dev.shermende.support.spring.aop.profiling.annotation.Profiling;
+import dev.shermende.support.spring.jmx.JmxControl;
+import dev.shermende.support.spring.jmx.impl.ToggleJmxControlImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
@@ -33,32 +35,36 @@ import java.util.stream.IntStream;
 @State(Scope.Benchmark)
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.MICROSECONDS)
-public class EmptyAspectBenchmark {
+public class ProfilingAspectDisabledBenchmark {
 
     private ConfigurableApplicationContext context;
 
     @Setup(Level.Trial)
     public synchronized void benchmarkSetup() {
-        context = SpringApplication.run(EmptyAspectBenchmarkConfiguration.class);
+        context = SpringApplication.run(ProfilingAspectTestConfiguration.class);
     }
 
     @Benchmark
     public void benchmark() {
-        context.getBean(EmptyAspectBenchmarkComponent.class).action();
+        context.getBean(ProfilingAspectTestComponent.class).action();
     }
 
     @ComponentScan
     @EnableAspectJAutoProxy(proxyTargetClass = true)
-    public static class EmptyAspectBenchmarkConfiguration {
+    public static class ProfilingAspectTestConfiguration {
         @Bean
-        public EmptyAspect emptyAspect() {
-            return new EmptyAspect();
+        public JmxControl jmxControl() {
+            return new ToggleJmxControlImpl(false);
+        }
+        @Bean
+        public ProfilingAspect profilingAspect(JmxControl jmxControl) {
+            return new ProfilingAspect(jmxControl);
         }
     }
 
     @Component
-    public static class EmptyAspectBenchmarkComponent {
-        @Logging
+    public static class ProfilingAspectTestComponent {
+        @Profiling
         void action() {
             IntStream.range(0, 10000).forEach(i -> {
                 double res = i / 10000.0;
