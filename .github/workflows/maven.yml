@@ -53,7 +53,7 @@ jobs:
   deploy:
     name: Deploy snapshot
     runs-on: ubuntu-latest
-    if: "contains(github.ref, 'develop')"
+    if: "contains(github.event.head_commit.message, '[ci snapshot]')"
     steps:
       - uses: actions/checkout@v2
         with:
@@ -73,28 +73,3 @@ jobs:
           MVN_USERNAME: ${{ secrets.MVN_USERNAME }}
           MVN_PASSWORD: ${{ secrets.MVN_PASSWORD }}
         run: mvn clean deploy -s .m2/settings.xml
-  release:
-    name: Release
-    runs-on: ubuntu-latest
-    if: "contains(github.event.head_commit.message, '[ci release]')"
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
-      - name: Set up JDK 1.8
-        uses: actions/setup-java@v1
-        with:
-          java-version: 1.8
-      - name: Cache Maven packages
-        uses: actions/cache@v1
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
-      - name: Release
-        env:
-          MVN_USERNAME: ${{ secrets.MVN_USERNAME }}
-          MVN_PASSWORD: ${{ secrets.MVN_PASSWORD }}
-        run: |
-          mvn -B clean release:prepare -s .m2/settings.xml -P oss
-          mvn -B clean release:perform -s .m2/settings.xml -P oss
