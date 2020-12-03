@@ -25,7 +25,6 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.TimeUnit;
-import java.util.stream.IntStream;
 
 @Slf4j
 @Fork(1)
@@ -56,6 +55,7 @@ public class ProfilingAspectDisabledBenchmark {
         public JmxControl jmxControl() {
             return new ToggleJmxControlImpl(false);
         }
+
         @Bean
         public ProfilingAspect profilingAspect(JmxControl jmxControl) {
             return new ProfilingAspect(jmxControl);
@@ -66,9 +66,6 @@ public class ProfilingAspectDisabledBenchmark {
     public static class ProfilingAspectTestComponent {
         @Profiling
         void action() {
-            IntStream.range(0, 10000).forEach(i -> {
-                double res = i / 10000.0;
-            });
         }
     }
 
