@@ -16,42 +16,40 @@
 
 [Other examples here](https://mvnrepository.com/artifact/dev.shermende/support-spring)
 
-## Step processor as chain of responsibility
+## Argument interception
 
-#### step 1. create step processor
+#### step 1. configuration
 
 ```java
 
-@Component
-public class ExampleStepProcessor extends AbstractStepProcessor<Object, Object> {
-    protected ExampleStepProcessor(BeanFactory factory) {
-        super(factory);
-    }
-
-    @Override
-    protected Collection<Class<? extends Step<Object, Object>>> steps() {
-        return Arrays.asList(ExampleFirstStep.class, ExampleSecondStep.class);
+@Configuration
+@EnableAspectJAutoProxy(proxyTargetClass = true)
+public class ApplicationConfiguration {
+    @Bean
+    public InterceptAspect interceptAspect() {
+        return new InterceptAspect();
     }
 }
 ```
 
-#### step 2. create steps
+#### step 2. create interceptor
 
 ```java
 
 @Component
-public class ExampleFirstStep implements Step<Object, Object> {
+public class ExampleInterceptor implements Interceptor {
     @Override
-    public Object execute(Object o) {
-        return o;
+    public boolean supports(
+        Class<?> aClass
+    ) {
+        return Object.class.isAssignableFrom(aClass);
     }
-}
 
-@Component
-public class ExampleSecondStep implements Step<Object, Object> {
     @Override
-    public Object execute(Object o) {
-        return o;
+    public void intercept(
+        Object o
+    ) {
+        // processing
     }
 }
 ```
@@ -61,19 +59,17 @@ public class ExampleSecondStep implements Step<Object, Object> {
 ```java
 
 @Service
-@RequiredArgsConstructor
 public class ExampleService {
-    private final ExampleStepProcessor processor;
-
+    @Intercept
     public void handle(
-        Object o
+        @InterceptArgument(ExampleInterceptor.class) Object payload
     ) {
-        processor.execute(o);
+        // processing
     }
 }
 ```
 
-## Factory pattern
+## Factory
 
 #### step 1. create factory
 
@@ -131,40 +127,42 @@ public class ExampleService {
 }
 ```
 
-## Argument interception
+## Step processor as chain of responsibility
 
-#### step 1. configuration
-
-```java
-
-@Configuration
-@EnableAspectJAutoProxy(proxyTargetClass = true)
-public class ApplicationConfiguration {
-    @Bean
-    public InterceptAspect interceptAspect() {
-        return new InterceptAspect();
-    }
-}
-```
-
-#### step 2. create interceptor
+#### step 1. create step processor
 
 ```java
 
 @Component
-public class ExampleInterceptor implements Interceptor {
-    @Override
-    public boolean supports(
-        Class<?> aClass
-    ) {
-        return Object.class.isAssignableFrom(aClass);
+public class ExampleStepProcessor extends AbstractStepProcessor<Object, Object> {
+    protected ExampleStepProcessor(BeanFactory factory) {
+        super(factory);
     }
 
     @Override
-    public void intercept(
-        Object o
-    ) {
-        // processing
+    protected Collection<Class<? extends Step<Object, Object>>> steps() {
+        return Arrays.asList(ExampleFirstStep.class, ExampleSecondStep.class);
+    }
+}
+```
+
+#### step 2. create steps
+
+```java
+
+@Component
+public class ExampleFirstStep implements Step<Object, Object> {
+    @Override
+    public Object execute(Object o) {
+        return o;
+    }
+}
+
+@Component
+public class ExampleSecondStep implements Step<Object, Object> {
+    @Override
+    public Object execute(Object o) {
+        return o;
     }
 }
 ```
@@ -174,12 +172,14 @@ public class ExampleInterceptor implements Interceptor {
 ```java
 
 @Service
+@RequiredArgsConstructor
 public class ExampleService {
-    @Intercept
+    private final ExampleStepProcessor processor;
+
     public void handle(
-        @InterceptArgument(ExampleInterceptor.class) Object payload
+        Object o
     ) {
-        // processing
+        processor.execute(o);
     }
 }
 ```
@@ -226,6 +226,12 @@ public class ProfilingAspectTestComponent {
 }
 ```
 
+#### step 3. example of log
+
+```
+[main] DEBUG dev.shermende.support.spring.aop.profiling.ProfilingAspect - [Profiling] [ProfilingAspectTestComponent#convert] [Duration:11]
+```
+
 ## Logging
 
 #### step 1. configuration
@@ -268,20 +274,36 @@ public class LoggingAspectTestComponent {
 }
 ```
 
-## JMH Benchmarking results
+#### step 3. example of log
 
 ```
-Benchmark                                   Mode  Cnt   Score    Error  Units
-AbstractFactoryTestBenchmark.benchmark      avgt    3   0.786 ±  0.441  us/op
-AbstractStepProcessorBenchmark.benchmark    avgt    3   1.117 ±  0.308  us/op
-DirectInvocationBenchmark.benchmark         avgt    3   0.333 ±  0.117  us/op
-EmptyAspectBenchmark.benchmark              avgt    3   0.330 ±  0.104  us/op
-InterceptAspectBenchmark.benchmark          avgt    3  42.310 ± 14.357  us/op
-InterceptResultAspectBenchmark.benchmark    avgt    3   3.471 ±  0.551  us/op
-LoggingAspectBenchmark.benchmark            avgt    3   6.041 ±  1.252  us/op
-LoggingAspectDisabledBenchmark.benchmark    avgt    3   2.399 ±  0.482  us/op
-ProfilingAspectBenchmark.benchmark          avgt    3   4.152 ±  0.553  us/op
-ProfilingAspectDisabledBenchmark.benchmark  avgt    3   2.360 ±  0.716  us/op
+[main] DEBUG dev.shermende.support.spring.aop.logging.LoggingAspect - [Logging before] [LoggingAspectTestComponent#convert] [Args:[java.lang.Object@bcec031]]
+[main] DEBUG dev.shermende.support.spring.aop.logging.LoggingAspect - [Logging after] [LoggingAspectTestComponent#convert] [Args:[java.lang.Object@bcec031]] [Result:java.lang.Object@bcec031]
+```
+
+## JMH Benchmarking results on GithubActions pipeline
+
+```
+# JMH version: 1.26
+# VM version: JDK 1.8.0_275, OpenJDK 64-Bit Server VM, 25.275-b01
+# VM invoker: /opt/hostedtoolcache/jdk/8.0.275/x64/jre/bin/java
+# VM options: <none>
+# Warmup: 3 iterations, 10 s each
+# Measurement: 3 iterations, 10 s each
+# Timeout: 10 min per iteration
+# Threads: 10 threads, will synchronize iterations
+# Benchmark mode: Average time, time/op
+Benchmark                                   Mode  Cnt   Score   Error  Units
+AbstractFactoryTestBenchmark.benchmark      avgt    3   0.797 ± 0.183  us/op
+AbstractStepProcessorBenchmark.benchmark    avgt    3   1.098 ± 0.266  us/op
+DirectInvocationBenchmark.benchmark         avgt    3   0.350 ± 0.105  us/op
+EmptyAspectBenchmark.benchmark              avgt    3   0.398 ± 0.045  us/op
+InterceptAspectBenchmark.benchmark          avgt    3  40.699 ± 5.868  us/op
+InterceptResultAspectBenchmark.benchmark    avgt    3   3.942 ± 0.641  us/op
+LoggingAspectBenchmark.benchmark            avgt    3   5.864 ± 1.611  us/op
+LoggingAspectDisabledBenchmark.benchmark    avgt    3   2.466 ± 0.437  us/op
+ProfilingAspectBenchmark.benchmark          avgt    3   4.983 ± 0.407  us/op
+ProfilingAspectDisabledBenchmark.benchmark  avgt    3   2.430 ± 0.667  us/op
 ```
 
 ## Troubleshooting
