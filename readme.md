@@ -1,4 +1,4 @@
-# Support library for spring-boot 2.1.x or higher
+# Help to developer for spring-boot 2.1.x or higher applications
 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=shermende_dev.shermende.support-spring&metric=alert_status)](https://sonarcloud.io/dashboard?id=shermende_dev.shermende.support-spring)
 
@@ -16,60 +16,7 @@
 
 [Other examples here](https://mvnrepository.com/artifact/dev.shermende/support-spring)
 
-## Argument interception
-
-#### step 1. configuration
-
-```java
-
-@Configuration
-@EnableAspectJAutoProxy(proxyTargetClass = true)
-public class ApplicationConfiguration {
-    @Bean
-    public InterceptAspect interceptAspect() {
-        return new InterceptAspect();
-    }
-}
-```
-
-#### step 2. create interceptor
-
-```java
-
-@Component
-public class ExampleInterceptor implements Interceptor {
-    @Override
-    public boolean supports(
-        Class<?> aClass
-    ) {
-        return Object.class.isAssignableFrom(aClass);
-    }
-
-    @Override
-    public void intercept(
-        Object o
-    ) {
-        // processing
-    }
-}
-```
-
-#### step 3. example of usage
-
-```java
-
-@Service
-public class ExampleService {
-    @Intercept
-    public void handle(
-        @InterceptArgument(ExampleInterceptor.class) Object payload
-    ) {
-        // processing
-    }
-}
-```
-
-## Factory
+## Factory pattern
 
 #### step 1. create factory
 
@@ -180,6 +127,59 @@ public class ExampleService {
         Object o
     ) {
         processor.execute(o);
+    }
+}
+```
+
+## Argument interception
+
+#### step 1. configuration
+
+```java
+
+@Configuration
+@EnableAspectJAutoProxy(proxyTargetClass = true)
+public class ApplicationConfiguration {
+    @Bean
+    public InterceptAspect interceptAspect() {
+        return new InterceptAspect();
+    }
+}
+```
+
+#### step 2. create interceptor
+
+```java
+
+@Component
+public class ExampleInterceptor implements Interceptor {
+    @Override
+    public boolean supports(
+        Class<?> aClass
+    ) {
+        return Object.class.isAssignableFrom(aClass);
+    }
+
+    @Override
+    public void intercept(
+        Object o
+    ) {
+        // processing
+    }
+}
+```
+
+#### step 3. example of usage
+
+```java
+
+@Service
+public class ExampleService {
+    @Intercept
+    public void handle(
+        @InterceptArgument(ExampleInterceptor.class) Object payload
+    ) {
+        // processing
     }
 }
 ```
