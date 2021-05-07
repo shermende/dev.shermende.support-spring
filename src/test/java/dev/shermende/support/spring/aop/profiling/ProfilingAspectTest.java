@@ -4,6 +4,7 @@ import dev.shermende.support.spring.aop.profiling.annotation.Profiling;
 import dev.shermende.support.spring.jmx.JmxControl;
 import dev.shermende.support.spring.jmx.impl.ToggleJmxControlImpl;
 import lombok.extern.slf4j.Slf4j;
+import org.aspectj.lang.Aspects;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,7 @@ public class ProfilingAspectTest {
     private ProfilingAspectTest.ProfilingAspectTestComponent component;
 
     @Test
-    public void profiling() {
+    public void profiling() throws Throwable {
         component.convert(new Object());
         verify(aspect, times(1)).profiling(any());
     }
@@ -44,8 +45,8 @@ public class ProfilingAspectTest {
         }
 
         @Bean
-        public ProfilingAspect interceptAspect(JmxControl jmxControl) {
-            return new ProfilingAspect(jmxControl);
+        public ProfilingAspect interceptAspect() {
+            return Aspects.aspectOf(ProfilingAspect.class);
         }
     }
 

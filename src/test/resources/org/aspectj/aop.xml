@@ -1,0 +1,13 @@
+<!DOCTYPE aspectj PUBLIC "-//AspectJ//DTD//EN" "http://www.eclipse.org/aspectj/dtd/aspectj.dtd">
+<aspectj>
+    <weaver>
+        <include within="dev.shermende.*"/>
+    </weaver>
+
+    <aspects>
+        <aspect name="dev.shermende.support.spring.aop.empty.EmptyAspect"/>
+        <aspect name="dev.shermende.support.spring.aop.logging.LoggingAspect"/>
+        <aspect name="dev.shermende.support.spring.aop.profiling.ProfilingAspect"/>
+        <aspect name="dev.shermende.support.spring.aop.intercept.InterceptAspect"/>
+    </aspects>
+</aspectj>
