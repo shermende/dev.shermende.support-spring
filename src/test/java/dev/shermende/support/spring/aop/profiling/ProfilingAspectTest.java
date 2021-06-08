@@ -16,16 +16,15 @@ import org.springframework.stereotype.Component;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = {ProfilingAspectTest.ProfilingAspectTestConfiguration.class})
 public class ProfilingAspectTest {
 
     @SpyBean
-    private ProfilingAspect aspect;
+    private JmxControl jmxControl;
 
     @Autowired
     private ProfilingAspectTest.ProfilingAspectTestComponent component;
@@ -33,7 +32,7 @@ public class ProfilingAspectTest {
     @Test
     public void profiling() throws Throwable {
         component.convert(new Object());
-        verify(aspect, times(1)).profiling(any());
+        then(jmxControl).should(times(1)).isEnabled();
     }
 
     @ComponentScan

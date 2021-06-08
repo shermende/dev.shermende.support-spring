@@ -31,9 +31,9 @@ public class InterceptAspectTest {
     public void intercept() {
         final Object object = new Object();
         component.convert(object);
-        verify(interceptor, times(4)).doIntercept(object);
-        verify(interceptor, times(4)).supports(object.getClass());
-        verify(interceptor, times(4)).intercept(object);
+        verify(interceptor, times(2)).doIntercept(object);
+        verify(interceptor, times(2)).supports(object.getClass());
+        verify(interceptor, times(2)).intercept(object);
     }
 
     @ComponentScan

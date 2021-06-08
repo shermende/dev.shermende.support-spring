@@ -22,7 +22,7 @@ public class ProfilingAspect implements InitializingBean {
     @Autowired
     private JmxControl jmxControl;
 
-    @Around("@annotation(dev.shermende.support.spring.aop.profiling.annotation.Profiling)")
+    @Around("@annotation(dev.shermende.support.spring.aop.profiling.annotation.Profiling) && execution(public * *(..))")
     public Object profiling(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
         // do nothing if disabled
         if (!jmxControl.isEnabled()) return proceedingJoinPoint.proceed();

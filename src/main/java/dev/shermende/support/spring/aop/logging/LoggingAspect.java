@@ -20,7 +20,7 @@ public class LoggingAspect implements InitializingBean {
     @Autowired
     private JmxControl jmxControl;
 
-    @Around("@annotation(dev.shermende.support.spring.aop.logging.annotation.Logging)")
+    @Around("@annotation(dev.shermende.support.spring.aop.logging.annotation.Logging) && execution(public * *(..))")
     public Object logging(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
         // do nothing if disabled
         if (!jmxControl.isEnabled()) return proceedingJoinPoint.proceed();

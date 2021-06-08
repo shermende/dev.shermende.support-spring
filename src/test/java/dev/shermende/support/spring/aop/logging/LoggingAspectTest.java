@@ -32,7 +32,7 @@ public class LoggingAspectTest {
     @Test
     public void logging() {
         component.convert(new Object());
-        then(jmxControl).should(times(2)).isEnabled();
+        then(jmxControl).should(times(1)).isEnabled();
     }
 
     @ComponentScan

@@ -21,7 +21,7 @@ public class InterceptResultAspect implements InitializingBean {
     @Autowired
     private BeanFactory beanFactory;
 
-    @AfterReturning(pointcut = "@annotation(dev.shermende.support.spring.aop.intercept.annotation.InterceptResult)", returning = "result")
+    @AfterReturning(pointcut = "@annotation(dev.shermende.support.spring.aop.intercept.annotation.InterceptResult) && execution(public * *(..))", returning = "result")
     public void interceptResult(
         JoinPoint joinPoint,
         Object result

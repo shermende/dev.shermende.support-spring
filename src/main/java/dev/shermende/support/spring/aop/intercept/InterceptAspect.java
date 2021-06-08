@@ -24,7 +24,7 @@ public class InterceptAspect implements InitializingBean {
     @Autowired
     private BeanFactory beanFactory;
 
-    @Before("@annotation(dev.shermende.support.spring.aop.intercept.annotation.Intercept)")
+    @Before("@annotation(dev.shermende.support.spring.aop.intercept.annotation.Intercept) && execution(public * *(..))")
     public void intercept(
         JoinPoint joinPoint
     ) throws NoSuchMethodException {
