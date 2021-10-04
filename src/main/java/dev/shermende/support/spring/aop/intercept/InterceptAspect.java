@@ -51,6 +51,7 @@ public class InterceptAspect implements InitializingBean {
         log.warn("Attention!!! @dev.shermende.support.spring.aop.intercept.annotation.Intercept annotation enabled");
     }
 
+    // setter for autowire
     public void setBeanFactory(BeanFactory beanFactory) {
         this.beanFactory = beanFactory;
     }

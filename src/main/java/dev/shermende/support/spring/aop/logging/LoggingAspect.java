@@ -53,6 +53,7 @@ public class LoggingAspect implements InitializingBean {
         log.warn("Attention!!! @dev.shermende.support.spring.aop.logging.annotation.Logging annotation enabled");
     }
 
+    // setter for autowire
     public void setJmxControl(JmxControl jmxControl) {
         this.jmxControl = jmxControl;
     }

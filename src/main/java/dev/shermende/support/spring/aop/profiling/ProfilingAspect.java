@@ -50,6 +50,7 @@ public class ProfilingAspect implements InitializingBean {
         log.warn("Attention!!! @dev.shermende.support.spring.aop.profiling.annotation.Profiling annotation enabled");
     }
 
+    // setter for autowire
     public void setJmxControl(JmxControl jmxControl) {
         this.jmxControl = jmxControl;
     }

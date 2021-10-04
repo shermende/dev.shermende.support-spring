@@ -7,9 +7,13 @@ import org.aspectj.lang.Aspects;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -36,15 +40,36 @@ public class InterceptAspectTest {
         verify(interceptor, times(2)).intercept(object);
     }
 
-    @ComponentScan
+    @ComponentScan(basePackageClasses = {InterceptAspectTestConfiguration.class})
     public static class InterceptAspectTestConfiguration {
+
+    }
+
+    @Configuration
+    @EnableAspectJAutoProxy(proxyTargetClass = true)
+    @ConditionalOnMissingBean(InterceptAspectTestConfigurationCTW.class)
+    public static class InterceptAspectTestConfigurationLTW {
         @Bean
-        public InterceptAspect interceptAspect() {
+        public InterceptAspect interceptAspectLTW() {
+            return new InterceptAspect();
+        }
+
+        @Bean
+        public InterceptResultAspect interceptResultAspectLTW() {
+            return new InterceptResultAspect();
+        }
+    }
+
+    @Configuration
+    @Profile("aspect-ctw")
+    public static class InterceptAspectTestConfigurationCTW {
+        @Bean
+        public InterceptAspect interceptAspectCTW() {
             return Aspects.aspectOf(InterceptAspect.class);
         }
 
         @Bean
-        public InterceptResultAspect interceptResultAspect() {
+        public InterceptResultAspect interceptResultAspectCTW() {
             return Aspects.aspectOf(InterceptResultAspect.class);
         }
     }
