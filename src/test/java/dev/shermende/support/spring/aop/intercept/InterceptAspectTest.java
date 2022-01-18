@@ -56,6 +56,11 @@ public class InterceptAspectTest {
         private static final Logger LOGGER = LoggerFactory.getLogger(InterceptAspectTestConfigurationLTW.class);
 
         @Bean
+        public JmxControl jmxControl() {
+            return new ToggleJmxControlImpl(true);
+        }
+
+        @Bean
         public InterceptAspect interceptAspectLTW() {
             return new InterceptAspect();
         }
@@ -110,8 +115,6 @@ public class InterceptAspectTest {
 
     @Component
     public static class InterceptAspectTestInterceptor implements Interceptor {
-        private static final Logger LOGGER = LoggerFactory.getLogger(InterceptAspectTestInterceptor.class);
-
         @Override
         public boolean supports(
             Class<?> aClass
@@ -123,7 +126,6 @@ public class InterceptAspectTest {
         public void intercept(
             Object payload
         ) {
-            LOGGER.info("Intercepted: {}", payload);
         }
     }
 }

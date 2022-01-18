@@ -2,6 +2,8 @@ package dev.shermende.support.spring.aop.intercept;
 
 import dev.shermende.support.spring.aop.intercept.annotation.Intercept;
 import dev.shermende.support.spring.aop.intercept.annotation.InterceptArgument;
+import dev.shermende.support.spring.jmx.JmxControl;
+import dev.shermende.support.spring.jmx.impl.ToggleJmxControlImpl;
 import org.aspectj.lang.Aspects;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,6 +42,11 @@ public class InterceptAspectWrongSupportTest {
     @EnableAspectJAutoProxy(proxyTargetClass = true)
     public static class InterceptAspectWrongSupportTestConfigurationLTW {
         @Bean
+        public JmxControl jmxControl() {
+            return new ToggleJmxControlImpl(true);
+        }
+
+        @Bean
         public InterceptAspect interceptAspect() {
             return new InterceptAspect();
         }
@@ -54,6 +61,11 @@ public class InterceptAspectWrongSupportTest {
     @Profile("aspect-ctw")
     public static class InterceptAspectWrongSupportTestConfigurationCTW {
         @Bean
+        public JmxControl jmxControl() {
+            return new ToggleJmxControlImpl(true);
+        }
+
+        @Bean
         public InterceptAspect interceptAspect() {
             return Aspects.aspectOf(InterceptAspect.class);
         }
@@ -63,7 +75,6 @@ public class InterceptAspectWrongSupportTest {
             return Aspects.aspectOf(InterceptResultAspect.class);
         }
     }
-
 
     @Component
     public static class InterceptAspectWrongSupportTestComponent {
