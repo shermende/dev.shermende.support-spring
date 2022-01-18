@@ -16,6 +16,8 @@ import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.Threads;
 import org.openjdk.jmh.annotations.Warmup;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -42,7 +44,7 @@ public class LoggingAspectDisabledBenchmark {
         context = SpringApplication.run(LoggingAspectBenchmarkConfiguration.class);
     }
 
-    @Benchmark 
+    @Benchmark
     public void benchmark() {
         context.getBean(LoggingAspectBenchmarkComponent.class).action();
     }
@@ -52,7 +54,7 @@ public class LoggingAspectDisabledBenchmark {
     @EnableAspectJAutoProxy(proxyTargetClass = true)
     public static class LoggingAspectBenchmarkConfiguration {
         @Bean
-        public JmxControl loggingAspectDisabledJmxControl() {
+        public JmxControl loggingAspectJmxControl() {
             return new ToggleJmxControlImpl(false);
         }
 
@@ -64,8 +66,11 @@ public class LoggingAspectDisabledBenchmark {
 
     @Component
     public static class LoggingAspectBenchmarkComponent {
+        private static final Logger LOGGER = LoggerFactory.getLogger(LoggingAspectDisabledBenchmark.LoggingAspectBenchmarkComponent.class);
+
         @Logging
         public void action() {
+            LOGGER.debug("LoggingAspectBenchmarkComponent");
         }
     }
 

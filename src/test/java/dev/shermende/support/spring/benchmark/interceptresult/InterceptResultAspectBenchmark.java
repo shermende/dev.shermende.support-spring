@@ -45,7 +45,7 @@ public class InterceptResultAspectBenchmark {
         context = SpringApplication.run(InterceptResultAspectBenchmarkConfiguration.class);
     }
 
-    @Benchmark 
+    @Benchmark
     public void benchmark() {
         context.getBean(InterceptResultAspectBenchmarkComponent.class).convert(new Object());
     }
@@ -90,7 +90,7 @@ public class InterceptResultAspectBenchmark {
         public void intercept(
             Object payload
         ) {
-            LOGGER.debug("interceptor working... {}", payload);
+            LOGGER.debug("InterceptResultAspectBenchmarkInterceptor");
         }
     }
 

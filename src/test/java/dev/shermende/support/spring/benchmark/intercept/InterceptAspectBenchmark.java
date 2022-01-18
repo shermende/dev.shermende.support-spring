@@ -99,7 +99,7 @@ public class InterceptAspectBenchmark {
         public void intercept(
             Object payload
         ) {
-            LOGGER.debug("interceptor working... {}", payload);
+            LOGGER.debug("InterceptAspectBenchmarkInterceptor");
         }
     }
 

@@ -39,7 +39,7 @@ public class EmptyAspectBenchmark {
         context = SpringApplication.run(EmptyAspectBenchmarkConfiguration.class);
     }
 
-    @Benchmark 
+    @Benchmark
     public void benchmark() {
         context.getBean(EmptyAspectBenchmarkComponent.class).action();
     }

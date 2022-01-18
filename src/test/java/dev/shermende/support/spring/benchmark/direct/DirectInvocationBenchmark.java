@@ -35,7 +35,7 @@ public class DirectInvocationBenchmark {
         context = SpringApplication.run(DirectInvocationBenchmarkConfiguration.class);
     }
 
-    @Benchmark 
+    @Benchmark
     public void benchmark() {
         context.getBean(DirectInvocationBenchmarkComponent.class).action();
     }

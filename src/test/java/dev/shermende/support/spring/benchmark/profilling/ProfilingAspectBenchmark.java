@@ -16,6 +16,8 @@ import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.Threads;
 import org.openjdk.jmh.annotations.Warmup;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -64,8 +66,11 @@ public class ProfilingAspectBenchmark {
 
     @Component
     public static class ProfilingAspectTestComponent {
+        private static final Logger LOGGER = LoggerFactory.getLogger(ProfilingAspectTestComponent.class);
+
         @Profiling
         public void action() {
+            LOGGER.debug("ProfilingAspectTestComponent");
         }
     }
 
