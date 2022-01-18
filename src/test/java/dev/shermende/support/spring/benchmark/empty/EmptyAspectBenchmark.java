@@ -1,4 +1,4 @@
-package dev.shermende.support.spring.benchmark;
+package dev.shermende.support.spring.benchmark.empty;
 
 import dev.shermende.support.spring.aop.empty.EmptyAspect;
 import dev.shermende.support.spring.aop.empty.annotation.Empty;

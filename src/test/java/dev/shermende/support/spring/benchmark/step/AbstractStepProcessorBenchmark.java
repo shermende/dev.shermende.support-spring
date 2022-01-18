@@ -1,4 +1,4 @@
-package dev.shermende.support.spring.benchmark;
+package dev.shermende.support.spring.benchmark.step;
 
 import dev.shermende.support.spring.processor.AbstractStepProcessor;
 import dev.shermende.support.spring.processor.Step;

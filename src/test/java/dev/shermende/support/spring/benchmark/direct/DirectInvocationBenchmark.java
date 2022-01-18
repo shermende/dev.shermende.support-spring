@@ -1,4 +1,4 @@
-package dev.shermende.support.spring.benchmark;
+package dev.shermende.support.spring.benchmark.direct;
 
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;

@@ -1,4 +1,4 @@
-package dev.shermende.support.spring.benchmark;
+package dev.shermende.support.spring.benchmark.factory;
 
 import dev.shermende.support.spring.factory.AbstractFactory;
 import org.openjdk.jmh.annotations.Benchmark;
