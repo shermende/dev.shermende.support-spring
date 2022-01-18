@@ -45,8 +45,7 @@ public class InterceptAspectBenchmark {
 
     @Setup(Level.Trial)
     public synchronized void benchmarkSetup() {
-        final SpringApplication application = new SpringApplication(InterceptAspectBenchmarkConfiguration.class);
-        context = application.run();
+        context = SpringApplication.run(InterceptAspectBenchmarkConfiguration.class);
     }
 
     @Benchmark
