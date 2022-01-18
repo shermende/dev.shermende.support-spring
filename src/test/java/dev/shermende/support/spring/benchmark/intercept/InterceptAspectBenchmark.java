@@ -39,7 +39,6 @@ import java.util.concurrent.TimeUnit;
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 public class InterceptAspectBenchmark {
-    private static final Logger log = LoggerFactory.getLogger(InterceptAspectBenchmark.class);
 
     private ConfigurableApplicationContext context;
 
@@ -87,6 +86,8 @@ public class InterceptAspectBenchmark {
 
     @Component
     public static class InterceptAspectBenchmarkInterceptor implements Interceptor {
+        private static final Logger LOGGER = LoggerFactory.getLogger(InterceptAspectBenchmark.InterceptAspectBenchmarkInterceptor.class);
+
         @Override
         public boolean supports(
             Class<?> aClass
@@ -98,7 +99,7 @@ public class InterceptAspectBenchmark {
         public void intercept(
             Object payload
         ) {
-            log.debug("interceptor working... {}", payload);
+            LOGGER.debug("interceptor working... {}", payload);
         }
     }
 
