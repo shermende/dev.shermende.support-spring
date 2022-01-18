@@ -52,7 +52,7 @@ public class LoggingAspectDisabledBenchmark {
     @EnableAspectJAutoProxy(proxyTargetClass = true)
     public static class LoggingAspectBenchmarkConfiguration {
         @Bean
-        public JmxControl jmxControl() {
+        public JmxControl loggingAspectDisabledJmxControl() {
             return new ToggleJmxControlImpl(false);
         }
 

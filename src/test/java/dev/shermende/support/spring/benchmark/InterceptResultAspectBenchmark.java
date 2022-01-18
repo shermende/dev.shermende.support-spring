@@ -57,7 +57,7 @@ public class InterceptResultAspectBenchmark {
     @EnableAspectJAutoProxy(proxyTargetClass = true)
     public static class InterceptResultAspectBenchmarkConfiguration {
         @Bean
-        public JmxControl jmxControl() {
+        public JmxControl interceptResultAspectJmxControl() {
             return new ToggleJmxControlImpl(true);
         }
 

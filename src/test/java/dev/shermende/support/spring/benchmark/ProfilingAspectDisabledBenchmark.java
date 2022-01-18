@@ -42,7 +42,7 @@ public class ProfilingAspectDisabledBenchmark {
         context = SpringApplication.run(ProfilingAspectTestConfiguration.class);
     }
 
-    @Benchmark 
+    @Benchmark
     public void benchmark() {
         context.getBean(ProfilingAspectTestComponent.class).action();
     }
@@ -52,7 +52,7 @@ public class ProfilingAspectDisabledBenchmark {
     @EnableAspectJAutoProxy(proxyTargetClass = true)
     public static class ProfilingAspectTestConfiguration {
         @Bean
-        public JmxControl jmxControl() {
+        public JmxControl profilingAspectDisabledJmxControl() {
             return new ToggleJmxControlImpl(false);
         }
 

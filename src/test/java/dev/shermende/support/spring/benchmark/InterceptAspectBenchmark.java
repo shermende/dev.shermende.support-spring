@@ -60,7 +60,7 @@ public class InterceptAspectBenchmark {
         private static final Logger LOGGER = LoggerFactory.getLogger(InterceptAspectBenchmark.InterceptAspectBenchmarkConfiguration.class);
 
         @Bean
-        public JmxControl jmxControl() {
+        public JmxControl interceptAspectJmxControl() {
             return new ToggleJmxControlImpl(true);
         }
 

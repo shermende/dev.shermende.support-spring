@@ -54,7 +54,7 @@ public class ProfilingAspectBenchmark {
     @EnableAspectJAutoProxy(proxyTargetClass = true)
     public static class ProfilingAspectTestConfiguration {
         @Bean
-        public JmxControl jmxControl() {
+        public JmxControl profilingAspectJmxControl() {
             return new ToggleJmxControlImpl(true);
         }
 
