@@ -1,13 +1,11 @@
 package dev.shermende.support.spring.jmx.impl;
 
 import dev.shermende.support.spring.jmx.ToggleJmxControl;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.jmx.export.annotation.ManagedResource;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-@Slf4j
 @ManagedResource
 public class ToggleJmxControlImpl implements ToggleJmxControl {
     private final AtomicBoolean enabled;

@@ -1,6 +1,5 @@
 package dev.shermende.support.spring.processor;
 
-import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
@@ -20,7 +19,6 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.times;
 
-@Slf4j
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = {AbstractStepProcessorTest.AbstractStepProcessorTestConfiguration.class})
 public class AbstractStepProcessorTest {

@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
 
 import java.lang.annotation.Annotation;
 import java.util.Optional;
@@ -18,6 +19,7 @@ import java.util.Optional;
  *
  */
 @Aspect
+@Configurable
 public class InterceptAspect implements InitializingBean {
     private static final Logger log = LoggerFactory.getLogger(InterceptAspect.class);
 

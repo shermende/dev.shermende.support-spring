@@ -6,6 +6,9 @@ import dev.shermende.support.spring.aop.intercept.annotation.InterceptResult;
 import org.aspectj.lang.Aspects;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
@@ -48,7 +51,9 @@ public class InterceptAspectTest {
     @Configuration
     @EnableAspectJAutoProxy(proxyTargetClass = true)
     @ConditionalOnMissingBean(InterceptAspectTestConfigurationCTW.class)
-    public static class InterceptAspectTestConfigurationLTW {
+    public static class InterceptAspectTestConfigurationLTW implements InitializingBean {
+        private static final Logger LOGGER = LoggerFactory.getLogger(InterceptAspectTestConfigurationCTW.class);
+
         @Bean
         public InterceptAspect interceptAspectLTW() {
             return new InterceptAspect();
@@ -58,11 +63,18 @@ public class InterceptAspectTest {
         public InterceptResultAspect interceptResultAspectLTW() {
             return new InterceptResultAspect();
         }
+
+        @Override
+        public void afterPropertiesSet() throws Exception {
+            LOGGER.info("Load time weaving mode");
+        }
     }
 
     @Configuration
     @Profile("aspect-ctw")
-    public static class InterceptAspectTestConfigurationCTW {
+    public static class InterceptAspectTestConfigurationCTW implements InitializingBean {
+        private static final Logger LOGGER = LoggerFactory.getLogger(InterceptAspectTestConfigurationCTW.class);
+
         @Bean
         public InterceptAspect interceptAspectCTW() {
             return Aspects.aspectOf(InterceptAspect.class);
@@ -71,6 +83,11 @@ public class InterceptAspectTest {
         @Bean
         public InterceptResultAspect interceptResultAspectCTW() {
             return Aspects.aspectOf(InterceptResultAspect.class);
+        }
+
+        @Override
+        public void afterPropertiesSet() throws Exception {
+            LOGGER.info("Compile time weaving mode");
         }
     }
 
@@ -87,6 +104,8 @@ public class InterceptAspectTest {
 
     @Component
     public static class InterceptAspectTestInterceptor implements Interceptor {
+        private static final Logger LOGGER = LoggerFactory.getLogger(InterceptAspectTestInterceptor.class);
+
         @Override
         public boolean supports(
             Class<?> aClass
@@ -98,6 +117,7 @@ public class InterceptAspectTest {
         public void intercept(
             Object payload
         ) {
+            LOGGER.info("Intercepted: {}", payload);
         }
     }
 }

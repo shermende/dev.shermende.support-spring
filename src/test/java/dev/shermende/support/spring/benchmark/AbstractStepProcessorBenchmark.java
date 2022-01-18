@@ -2,7 +2,6 @@ package dev.shermende.support.spring.benchmark;
 
 import dev.shermende.support.spring.processor.AbstractStepProcessor;
 import dev.shermende.support.spring.processor.Step;
-import lombok.extern.slf4j.Slf4j;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Fork;
@@ -25,7 +24,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 
-@Slf4j
 @Fork(1)
 @Threads(10)
 @Warmup(iterations = 3)

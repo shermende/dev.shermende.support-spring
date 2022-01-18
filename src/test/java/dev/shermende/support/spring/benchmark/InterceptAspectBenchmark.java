@@ -4,9 +4,19 @@ import dev.shermende.support.spring.aop.intercept.InterceptAspect;
 import dev.shermende.support.spring.aop.intercept.Interceptor;
 import dev.shermende.support.spring.aop.intercept.annotation.Intercept;
 import dev.shermende.support.spring.aop.intercept.annotation.InterceptArgument;
-import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.Aspects;
-import org.openjdk.jmh.annotations.*;
+import org.openjdk.jmh.annotations.Benchmark;
+import org.openjdk.jmh.annotations.BenchmarkMode;
+import org.openjdk.jmh.annotations.Fork;
+import org.openjdk.jmh.annotations.Level;
+import org.openjdk.jmh.annotations.Measurement;
+import org.openjdk.jmh.annotations.Mode;
+import org.openjdk.jmh.annotations.OutputTimeUnit;
+import org.openjdk.jmh.annotations.Scope;
+import org.openjdk.jmh.annotations.Setup;
+import org.openjdk.jmh.annotations.State;
+import org.openjdk.jmh.annotations.Threads;
+import org.openjdk.jmh.annotations.Warmup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -49,7 +59,6 @@ public class InterceptAspectBenchmark {
         }
     }
 
-    @Slf4j
     @Component
     public static class InterceptAspectBenchmarkComponent {
         @Intercept
@@ -60,7 +69,6 @@ public class InterceptAspectBenchmark {
         }
     }
 
-    @Slf4j
     @Component
     public static class InterceptAspectBenchmarkInterceptor implements Interceptor {
         @Override

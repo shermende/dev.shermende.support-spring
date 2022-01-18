@@ -10,11 +10,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
 
 /**
  *
  */
 @Aspect
+@Configurable
 public class InterceptResultAspect implements InitializingBean {
     private static final Logger log = LoggerFactory.getLogger(InterceptResultAspect.class);
 
