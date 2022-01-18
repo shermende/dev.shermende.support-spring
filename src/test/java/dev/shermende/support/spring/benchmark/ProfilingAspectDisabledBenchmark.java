@@ -20,6 +20,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.stereotype.Component;
 
@@ -47,6 +48,7 @@ public class ProfilingAspectDisabledBenchmark {
     }
 
     @ComponentScan
+    @Configuration
     @EnableAspectJAutoProxy(proxyTargetClass = true)
     public static class ProfilingAspectTestConfiguration {
         @Bean

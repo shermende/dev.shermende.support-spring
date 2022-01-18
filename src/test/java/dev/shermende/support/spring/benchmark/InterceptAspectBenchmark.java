@@ -54,15 +54,11 @@ public class InterceptAspectBenchmark {
         context.getBean(InterceptAspectBenchmarkComponent.class).convert(new Object());
     }
 
-    @ComponentScan(basePackageClasses = {InterceptAspectBenchmarkConfiguration.class})
-    public static class InterceptAspectBenchmarkConfiguration {
-
-    }
-
+    @ComponentScan
     @Configuration
     @EnableAspectJAutoProxy(proxyTargetClass = true)
-    public static class InterceptAspectBenchmarkConfigurationLTW implements InitializingBean {
-        private static final Logger LOGGER = LoggerFactory.getLogger(InterceptAspectBenchmark.InterceptAspectBenchmarkConfigurationLTW.class);
+    public static class InterceptAspectBenchmarkConfiguration implements InitializingBean {
+        private static final Logger LOGGER = LoggerFactory.getLogger(InterceptAspectBenchmark.InterceptAspectBenchmarkConfiguration.class);
 
         @Bean
         public JmxControl jmxControl() {
