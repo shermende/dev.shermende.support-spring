@@ -1,4 +1,4 @@
-package dev.shermende.support.spring.benchmark;
+package dev.shermende.support.spring.benchmark.profilling;
 
 import dev.shermende.support.spring.aop.profiling.ProfilingAspect;
 import dev.shermende.support.spring.aop.profiling.annotation.Profiling;
@@ -16,11 +16,10 @@ import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.Threads;
 import org.openjdk.jmh.annotations.Warmup;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.stereotype.Component;
@@ -49,6 +48,7 @@ public class ProfilingAspectBenchmark {
     }
 
     @Configuration
+    @ComponentScan
     @EnableAspectJAutoProxy(proxyTargetClass = true)
     public static class ProfilingAspectTestConfiguration {
         @Bean
@@ -64,11 +64,8 @@ public class ProfilingAspectBenchmark {
 
     @Component
     public static class ProfilingAspectTestComponent {
-        private static final Logger LOGGER = LoggerFactory.getLogger(ProfilingAspectTestComponent.class);
-
         @Profiling
         public void action() {
-            LOGGER.info("ProfilingAspectTestComponent");
         }
     }
 

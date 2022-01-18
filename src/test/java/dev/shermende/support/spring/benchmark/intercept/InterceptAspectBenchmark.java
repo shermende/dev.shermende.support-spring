@@ -1,4 +1,4 @@
-package dev.shermende.support.spring.benchmark;
+package dev.shermende.support.spring.benchmark.intercept;
 
 import dev.shermende.support.spring.aop.intercept.InterceptAspect;
 import dev.shermende.support.spring.aop.intercept.Interceptor;
@@ -24,6 +24,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.stereotype.Component;
@@ -53,6 +54,7 @@ public class InterceptAspectBenchmark {
     }
 
     @Configuration
+    @ComponentScan
     @EnableAspectJAutoProxy(proxyTargetClass = true)
     public static class InterceptAspectBenchmarkConfiguration implements InitializingBean {
         private static final Logger LOGGER = LoggerFactory.getLogger(InterceptAspectBenchmark.InterceptAspectBenchmarkConfiguration.class);

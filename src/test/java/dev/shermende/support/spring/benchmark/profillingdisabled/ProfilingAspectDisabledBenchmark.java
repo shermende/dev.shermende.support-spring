@@ -1,7 +1,7 @@
-package dev.shermende.support.spring.benchmark;
+package dev.shermende.support.spring.benchmark.profillingdisabled;
 
-import dev.shermende.support.spring.aop.logging.LoggingAspect;
-import dev.shermende.support.spring.aop.logging.annotation.Logging;
+import dev.shermende.support.spring.aop.profiling.ProfilingAspect;
+import dev.shermende.support.spring.aop.profiling.annotation.Profiling;
 import dev.shermende.support.spring.jmx.JmxControl;
 import dev.shermende.support.spring.jmx.impl.ToggleJmxControlImpl;
 import org.openjdk.jmh.annotations.Benchmark;
@@ -16,11 +16,10 @@ import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.Threads;
 import org.openjdk.jmh.annotations.Warmup;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.stereotype.Component;
@@ -34,40 +33,38 @@ import java.util.concurrent.TimeUnit;
 @State(Scope.Benchmark)
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
-public class LoggingAspectBenchmark {
-    private static final Logger LOGGER = LoggerFactory.getLogger(LoggingAspectBenchmark.class);
+public class ProfilingAspectDisabledBenchmark {
 
     private ConfigurableApplicationContext context;
 
     @Setup(Level.Trial)
     public synchronized void benchmarkSetup() {
-        context = SpringApplication.run(LoggingAspectBenchmarkConfiguration.class);
+        context = SpringApplication.run(ProfilingAspectTestConfiguration.class);
     }
 
     @Benchmark
     public void benchmark() {
-        context.getBean(LoggingAspectBenchmarkComponent.class).action();
+        context.getBean(ProfilingAspectTestComponent.class).action();
     }
 
     @Configuration
+    @ComponentScan
     @EnableAspectJAutoProxy(proxyTargetClass = true)
-    public static class LoggingAspectBenchmarkConfiguration {
+    public static class ProfilingAspectTestConfiguration {
         @Bean
-        public JmxControl loggingAspectJmxControl() {
-            return new ToggleJmxControlImpl(true);
+        public JmxControl profilingAspectDisabledJmxControl() {
+            return new ToggleJmxControlImpl(false);
         }
 
         @Bean
-        public LoggingAspect loggingAspect() {
-            return new LoggingAspect();
+        public ProfilingAspect profilingAspect() {
+            return new ProfilingAspect();
         }
     }
 
     @Component
-    public static class LoggingAspectBenchmarkComponent {
-        private static final Logger LOGGER = LoggerFactory.getLogger(LoggingAspectBenchmarkComponent.class);
-
-        @Logging
+    public static class ProfilingAspectTestComponent {
+        @Profiling
         public void action() {
         }
     }

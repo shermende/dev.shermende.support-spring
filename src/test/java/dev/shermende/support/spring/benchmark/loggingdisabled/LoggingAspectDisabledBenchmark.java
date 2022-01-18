@@ -1,7 +1,7 @@
-package dev.shermende.support.spring.benchmark;
+package dev.shermende.support.spring.benchmark.loggingdisabled;
 
-import dev.shermende.support.spring.aop.profiling.ProfilingAspect;
-import dev.shermende.support.spring.aop.profiling.annotation.Profiling;
+import dev.shermende.support.spring.aop.logging.LoggingAspect;
+import dev.shermende.support.spring.aop.logging.annotation.Logging;
 import dev.shermende.support.spring.jmx.JmxControl;
 import dev.shermende.support.spring.jmx.impl.ToggleJmxControlImpl;
 import org.openjdk.jmh.annotations.Benchmark;
@@ -19,6 +19,7 @@ import org.openjdk.jmh.annotations.Warmup;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.stereotype.Component;
@@ -32,37 +33,38 @@ import java.util.concurrent.TimeUnit;
 @State(Scope.Benchmark)
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
-public class ProfilingAspectDisabledBenchmark {
+public class LoggingAspectDisabledBenchmark {
 
     private ConfigurableApplicationContext context;
 
     @Setup(Level.Trial)
     public synchronized void benchmarkSetup() {
-        context = SpringApplication.run(ProfilingAspectTestConfiguration.class);
+        context = SpringApplication.run(LoggingAspectBenchmarkConfiguration.class);
     }
 
-    @Benchmark
+    @Benchmark 
     public void benchmark() {
-        context.getBean(ProfilingAspectTestComponent.class).action();
+        context.getBean(LoggingAspectBenchmarkComponent.class).action();
     }
 
     @Configuration
+    @ComponentScan
     @EnableAspectJAutoProxy(proxyTargetClass = true)
-    public static class ProfilingAspectTestConfiguration {
+    public static class LoggingAspectBenchmarkConfiguration {
         @Bean
-        public JmxControl profilingAspectDisabledJmxControl() {
+        public JmxControl loggingAspectDisabledJmxControl() {
             return new ToggleJmxControlImpl(false);
         }
 
         @Bean
-        public ProfilingAspect profilingAspect() {
-            return new ProfilingAspect();
+        public LoggingAspect loggingAspect() {
+            return new LoggingAspect();
         }
     }
 
     @Component
-    public static class ProfilingAspectTestComponent {
-        @Profiling
+    public static class LoggingAspectBenchmarkComponent {
+        @Logging
         public void action() {
         }
     }

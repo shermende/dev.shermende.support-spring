@@ -1,8 +1,7 @@
-package dev.shermende.support.spring.benchmark;
+package dev.shermende.support.spring.benchmark.logging;
 
-import dev.shermende.support.spring.aop.intercept.InterceptResultAspect;
-import dev.shermende.support.spring.aop.intercept.Interceptor;
-import dev.shermende.support.spring.aop.intercept.annotation.InterceptResult;
+import dev.shermende.support.spring.aop.logging.LoggingAspect;
+import dev.shermende.support.spring.aop.logging.annotation.Logging;
 import dev.shermende.support.spring.jmx.JmxControl;
 import dev.shermende.support.spring.jmx.impl.ToggleJmxControlImpl;
 import org.openjdk.jmh.annotations.Benchmark;
@@ -22,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.stereotype.Component;
@@ -35,60 +35,40 @@ import java.util.concurrent.TimeUnit;
 @State(Scope.Benchmark)
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
-public class InterceptResultAspectBenchmark {
-
-    private static final Logger log = LoggerFactory.getLogger(InterceptResultAspectBenchmark.class);
+public class LoggingAspectBenchmark {
+    private static final Logger LOGGER = LoggerFactory.getLogger(LoggingAspectBenchmark.class);
 
     private ConfigurableApplicationContext context;
 
     @Setup(Level.Trial)
     public synchronized void benchmarkSetup() {
-        context = SpringApplication.run(InterceptResultAspectBenchmarkConfiguration.class);
+        context = SpringApplication.run(LoggingAspectBenchmarkConfiguration.class);
     }
 
-    @Benchmark 
+    @Benchmark
     public void benchmark() {
-        context.getBean(InterceptResultAspectBenchmarkComponent.class).convert(new Object());
+        context.getBean(LoggingAspectBenchmarkComponent.class).action();
     }
 
     @Configuration
+    @ComponentScan
     @EnableAspectJAutoProxy(proxyTargetClass = true)
-    public static class InterceptResultAspectBenchmarkConfiguration {
+    public static class LoggingAspectBenchmarkConfiguration {
         @Bean
-        public JmxControl interceptResultAspectJmxControl() {
+        public JmxControl loggingAspectJmxControl() {
             return new ToggleJmxControlImpl(true);
         }
 
         @Bean
-        public InterceptResultAspect interceptResultAspect() {
-            return new InterceptResultAspect();
+        public LoggingAspect loggingAspect() {
+            return new LoggingAspect();
         }
     }
 
     @Component
-    public static class InterceptResultAspectBenchmarkComponent {
-        @InterceptResult(InterceptResultAspectBenchmark.InterceptResultAspectBenchmarkInterceptor.class)
-        public Object convert(
-            Object payload
-        ) {
-            return payload;
-        }
-    }
-
-    @Component
-    public static class InterceptResultAspectBenchmarkInterceptor implements Interceptor {
-        @Override
-        public boolean supports(
-            Class<?> aClass
-        ) {
-            return Object.class.isAssignableFrom(aClass);
-        }
-
-        @Override
-        public void intercept(
-            Object payload
-        ) {
-            log.debug("interceptor working... {}", payload);
+    public static class LoggingAspectBenchmarkComponent {
+        @Logging
+        public void action() {
         }
     }
 
