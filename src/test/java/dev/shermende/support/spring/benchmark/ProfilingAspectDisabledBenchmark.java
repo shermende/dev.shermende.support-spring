@@ -4,7 +4,6 @@ import dev.shermende.support.spring.aop.profiling.ProfilingAspect;
 import dev.shermende.support.spring.aop.profiling.annotation.Profiling;
 import dev.shermende.support.spring.jmx.JmxControl;
 import dev.shermende.support.spring.jmx.impl.ToggleJmxControlImpl;
-import org.aspectj.lang.Aspects;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Fork;
@@ -31,8 +30,8 @@ import java.util.concurrent.TimeUnit;
 @Warmup(iterations = 3)
 @Measurement(iterations = 3)
 @State(Scope.Benchmark)
-@BenchmarkMode(Mode.AverageTime)
-@OutputTimeUnit(TimeUnit.MICROSECONDS)
+@BenchmarkMode(Mode.Throughput)
+@OutputTimeUnit(TimeUnit.MILLISECONDS)
 public class ProfilingAspectDisabledBenchmark {
 
     private ConfigurableApplicationContext context;
@@ -42,7 +41,7 @@ public class ProfilingAspectDisabledBenchmark {
         context = SpringApplication.run(ProfilingAspectTestConfiguration.class);
     }
 
-    @Benchmark
+    @Benchmark 
     public void benchmark() {
         context.getBean(ProfilingAspectTestComponent.class).action();
     }
@@ -57,14 +56,14 @@ public class ProfilingAspectDisabledBenchmark {
 
         @Bean
         public ProfilingAspect profilingAspect() {
-            return Aspects.aspectOf(ProfilingAspect.class);
+            return new ProfilingAspect();
         }
     }
 
     @Component
     public static class ProfilingAspectTestComponent {
         @Profiling
-        void action() {
+        public void action() {
         }
     }
 

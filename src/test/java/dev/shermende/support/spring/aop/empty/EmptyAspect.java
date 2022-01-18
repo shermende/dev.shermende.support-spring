@@ -9,8 +9,7 @@ public class EmptyAspect {
 
     @Around("@annotation(dev.shermende.support.spring.aop.empty.annotation.Empty)")
     public Object empty(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
-        final Object proceed = proceedingJoinPoint.proceed();
-        return proceed;
+        return proceedingJoinPoint.proceed();
     }
 
 }

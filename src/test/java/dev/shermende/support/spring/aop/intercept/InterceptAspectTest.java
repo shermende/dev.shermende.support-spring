@@ -3,6 +3,8 @@ package dev.shermende.support.spring.aop.intercept;
 import dev.shermende.support.spring.aop.intercept.annotation.Intercept;
 import dev.shermende.support.spring.aop.intercept.annotation.InterceptArgument;
 import dev.shermende.support.spring.aop.intercept.annotation.InterceptResult;
+import dev.shermende.support.spring.jmx.JmxControl;
+import dev.shermende.support.spring.jmx.impl.ToggleJmxControlImpl;
 import org.aspectj.lang.Aspects;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -49,10 +50,10 @@ public class InterceptAspectTest {
     }
 
     @Configuration
+    @Profile("!aspect-ctw")
     @EnableAspectJAutoProxy(proxyTargetClass = true)
-    @ConditionalOnMissingBean(InterceptAspectTestConfigurationCTW.class)
     public static class InterceptAspectTestConfigurationLTW implements InitializingBean {
-        private static final Logger LOGGER = LoggerFactory.getLogger(InterceptAspectTestConfigurationCTW.class);
+        private static final Logger LOGGER = LoggerFactory.getLogger(InterceptAspectTestConfigurationLTW.class);
 
         @Bean
         public InterceptAspect interceptAspectLTW() {
@@ -74,6 +75,11 @@ public class InterceptAspectTest {
     @Profile("aspect-ctw")
     public static class InterceptAspectTestConfigurationCTW implements InitializingBean {
         private static final Logger LOGGER = LoggerFactory.getLogger(InterceptAspectTestConfigurationCTW.class);
+
+        @Bean
+        public JmxControl jmxControl() {
+            return new ToggleJmxControlImpl(true);
+        }
 
         @Bean
         public InterceptAspect interceptAspectCTW() {

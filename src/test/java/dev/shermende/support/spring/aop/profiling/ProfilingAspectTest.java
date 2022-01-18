@@ -6,8 +6,9 @@ import dev.shermende.support.spring.jmx.impl.ToggleJmxControlImpl;
 import org.aspectj.lang.Aspects;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -42,8 +43,8 @@ public class ProfilingAspectTest {
     }
 
     @Configuration
+    @Profile("!aspect-ctw")
     @EnableAspectJAutoProxy(proxyTargetClass = true)
-    @ConditionalOnMissingBean(ProfilingAspectTest.ProfilingAspectTestConfigurationCTW.class)
     public static class ProfilingAspectTestConfigurationLTW {
         @Bean
         public JmxControl jmxControl() {
@@ -72,6 +73,8 @@ public class ProfilingAspectTest {
 
     @Component
     public static class ProfilingAspectTestComponent {
+        private static final Logger LOGGER = LoggerFactory.getLogger(ProfilingAspectTestComponent.class);
+
         @Profiling
         public Object convert(
             Object payload

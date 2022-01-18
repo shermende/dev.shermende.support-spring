@@ -9,15 +9,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 /**
  *
  */
 @Aspect
+@Configurable
 public class LoggingAspect implements InitializingBean {
     private static final Logger log = LoggerFactory.getLogger(LoggingAspect.class);
 
     @Autowired
+    @Qualifier("loggingAspectJmxControl")
     private JmxControl jmxControl;
 
     @Around("@annotation(dev.shermende.support.spring.aop.logging.annotation.Logging) && execution(public * *(..))")

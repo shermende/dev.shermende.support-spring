@@ -3,7 +3,8 @@ package dev.shermende.support.spring.benchmark;
 import dev.shermende.support.spring.aop.intercept.InterceptResultAspect;
 import dev.shermende.support.spring.aop.intercept.Interceptor;
 import dev.shermende.support.spring.aop.intercept.annotation.InterceptResult;
-import org.aspectj.lang.Aspects;
+import dev.shermende.support.spring.jmx.JmxControl;
+import dev.shermende.support.spring.jmx.impl.ToggleJmxControlImpl;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Fork;
@@ -32,8 +33,8 @@ import java.util.concurrent.TimeUnit;
 @Warmup(iterations = 3)
 @Measurement(iterations = 3)
 @State(Scope.Benchmark)
-@BenchmarkMode(Mode.AverageTime)
-@OutputTimeUnit(TimeUnit.MICROSECONDS)
+@BenchmarkMode(Mode.Throughput)
+@OutputTimeUnit(TimeUnit.MILLISECONDS)
 public class InterceptResultAspectBenchmark {
 
     private static final Logger log = LoggerFactory.getLogger(InterceptResultAspectBenchmark.class);
@@ -45,7 +46,7 @@ public class InterceptResultAspectBenchmark {
         context = SpringApplication.run(InterceptResultAspectBenchmarkConfiguration.class);
     }
 
-    @Benchmark
+    @Benchmark 
     public void benchmark() {
         context.getBean(InterceptResultAspectBenchmarkComponent.class).convert(new Object());
     }
@@ -54,8 +55,13 @@ public class InterceptResultAspectBenchmark {
     @EnableAspectJAutoProxy(proxyTargetClass = true)
     public static class InterceptResultAspectBenchmarkConfiguration {
         @Bean
+        public JmxControl jmxControl() {
+            return new ToggleJmxControlImpl(true);
+        }
+
+        @Bean
         public InterceptResultAspect interceptResultAspect() {
-            return Aspects.aspectOf(InterceptResultAspect.class);
+            return new InterceptResultAspect();
         }
     }
 

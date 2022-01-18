@@ -6,7 +6,6 @@ import org.aspectj.lang.Aspects;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -37,8 +36,8 @@ public class InterceptAspectWrongSupportTest {
     }
 
     @ComponentScan
+    @Profile("!aspect-ctw")
     @EnableAspectJAutoProxy(proxyTargetClass = true)
-    @ConditionalOnMissingBean(InterceptAspectWrongSupportTest.InterceptAspectWrongSupportTestConfigurationCTW.class)
     public static class InterceptAspectWrongSupportTestConfigurationLTW {
         @Bean
         public InterceptAspect interceptAspect() {

@@ -4,7 +4,6 @@ import dev.shermende.support.spring.aop.logging.LoggingAspect;
 import dev.shermende.support.spring.aop.logging.annotation.Logging;
 import dev.shermende.support.spring.jmx.JmxControl;
 import dev.shermende.support.spring.jmx.impl.ToggleJmxControlImpl;
-import org.aspectj.lang.Aspects;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Fork;
@@ -30,8 +29,8 @@ import java.util.concurrent.TimeUnit;
 @Warmup(iterations = 3)
 @Measurement(iterations = 3)
 @State(Scope.Benchmark)
-@BenchmarkMode(Mode.AverageTime)
-@OutputTimeUnit(TimeUnit.MICROSECONDS)
+@BenchmarkMode(Mode.Throughput)
+@OutputTimeUnit(TimeUnit.MILLISECONDS)
 public class LoggingAspectDisabledBenchmark {
 
     private ConfigurableApplicationContext context;
@@ -41,7 +40,7 @@ public class LoggingAspectDisabledBenchmark {
         context = SpringApplication.run(LoggingAspectBenchmarkConfiguration.class);
     }
 
-    @Benchmark
+    @Benchmark 
     public void benchmark() {
         context.getBean(LoggingAspectBenchmarkComponent.class).action();
     }
@@ -55,14 +54,14 @@ public class LoggingAspectDisabledBenchmark {
 
         @Bean
         public LoggingAspect loggingAspect() {
-            return Aspects.aspectOf(LoggingAspect.class);
+            return new LoggingAspect();
         }
     }
 
     @Component
     public static class LoggingAspectBenchmarkComponent {
         @Logging
-        void action() {
+        public void action() {
         }
     }
 

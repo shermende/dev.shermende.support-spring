@@ -4,7 +4,6 @@ import dev.shermende.support.spring.aop.profiling.ProfilingAspect;
 import dev.shermende.support.spring.aop.profiling.annotation.Profiling;
 import dev.shermende.support.spring.jmx.JmxControl;
 import dev.shermende.support.spring.jmx.impl.ToggleJmxControlImpl;
-import org.aspectj.lang.Aspects;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Fork;
@@ -17,6 +16,8 @@ import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.Threads;
 import org.openjdk.jmh.annotations.Warmup;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -31,8 +32,8 @@ import java.util.concurrent.TimeUnit;
 @Warmup(iterations = 3)
 @Measurement(iterations = 3)
 @State(Scope.Benchmark)
-@BenchmarkMode(Mode.AverageTime)
-@OutputTimeUnit(TimeUnit.MICROSECONDS)
+@BenchmarkMode(Mode.Throughput)
+@OutputTimeUnit(TimeUnit.MILLISECONDS)
 public class ProfilingAspectBenchmark {
 
     private ConfigurableApplicationContext context;
@@ -54,16 +55,20 @@ public class ProfilingAspectBenchmark {
         public JmxControl jmxControl() {
             return new ToggleJmxControlImpl(true);
         }
+
         @Bean
         public ProfilingAspect profilingAspect() {
-            return Aspects.aspectOf(ProfilingAspect.class);
+            return new ProfilingAspect();
         }
     }
 
     @Component
     public static class ProfilingAspectTestComponent {
+        private static final Logger LOGGER = LoggerFactory.getLogger(ProfilingAspectTestComponent.class);
+
         @Profiling
-        void action() {
+        public void action() {
+            LOGGER.info("ProfilingAspectTestComponent");
         }
     }
 

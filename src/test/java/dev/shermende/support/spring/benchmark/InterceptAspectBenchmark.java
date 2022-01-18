@@ -4,7 +4,8 @@ import dev.shermende.support.spring.aop.intercept.InterceptAspect;
 import dev.shermende.support.spring.aop.intercept.Interceptor;
 import dev.shermende.support.spring.aop.intercept.annotation.Intercept;
 import dev.shermende.support.spring.aop.intercept.annotation.InterceptArgument;
-import org.aspectj.lang.Aspects;
+import dev.shermende.support.spring.jmx.JmxControl;
+import dev.shermende.support.spring.jmx.impl.ToggleJmxControlImpl;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Fork;
@@ -19,10 +20,12 @@ import org.openjdk.jmh.annotations.Threads;
 import org.openjdk.jmh.annotations.Warmup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.stereotype.Component;
 
@@ -33,8 +36,8 @@ import java.util.concurrent.TimeUnit;
 @Warmup(iterations = 3)
 @Measurement(iterations = 3)
 @State(Scope.Benchmark)
-@BenchmarkMode(Mode.AverageTime)
-@OutputTimeUnit(TimeUnit.MICROSECONDS)
+@BenchmarkMode(Mode.Throughput)
+@OutputTimeUnit(TimeUnit.MILLISECONDS)
 public class InterceptAspectBenchmark {
     private static final Logger log = LoggerFactory.getLogger(InterceptAspectBenchmark.class);
 
@@ -42,7 +45,8 @@ public class InterceptAspectBenchmark {
 
     @Setup(Level.Trial)
     public synchronized void benchmarkSetup() {
-        context = SpringApplication.run(InterceptAspectBenchmarkConfiguration.class);
+        final SpringApplication application = new SpringApplication(InterceptAspectBenchmarkConfiguration.class);
+        context = application.run();
     }
 
     @Benchmark
@@ -50,12 +54,29 @@ public class InterceptAspectBenchmark {
         context.getBean(InterceptAspectBenchmarkComponent.class).convert(new Object());
     }
 
-    @ComponentScan
-    @EnableAspectJAutoProxy(proxyTargetClass = true)
+    @ComponentScan(basePackageClasses = {InterceptAspectBenchmarkConfiguration.class})
     public static class InterceptAspectBenchmarkConfiguration {
+
+    }
+
+    @Configuration
+    @EnableAspectJAutoProxy(proxyTargetClass = true)
+    public static class InterceptAspectBenchmarkConfigurationLTW implements InitializingBean {
+        private static final Logger LOGGER = LoggerFactory.getLogger(InterceptAspectBenchmark.InterceptAspectBenchmarkConfigurationLTW.class);
+
+        @Bean
+        public JmxControl jmxControl() {
+            return new ToggleJmxControlImpl(true);
+        }
+
         @Bean
         public InterceptAspect interceptAspect() {
-            return Aspects.aspectOf(InterceptAspect.class);
+            return new InterceptAspect();
+        }
+
+        @Override
+        public void afterPropertiesSet() throws Exception {
+            LOGGER.info("Load time weaving mode");
         }
     }
 

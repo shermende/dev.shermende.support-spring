@@ -4,8 +4,18 @@ import dev.shermende.support.spring.aop.logging.LoggingAspect;
 import dev.shermende.support.spring.aop.logging.annotation.Logging;
 import dev.shermende.support.spring.jmx.JmxControl;
 import dev.shermende.support.spring.jmx.impl.ToggleJmxControlImpl;
-import org.aspectj.lang.Aspects;
-import org.openjdk.jmh.annotations.*;
+import org.openjdk.jmh.annotations.Benchmark;
+import org.openjdk.jmh.annotations.BenchmarkMode;
+import org.openjdk.jmh.annotations.Fork;
+import org.openjdk.jmh.annotations.Level;
+import org.openjdk.jmh.annotations.Measurement;
+import org.openjdk.jmh.annotations.Mode;
+import org.openjdk.jmh.annotations.OutputTimeUnit;
+import org.openjdk.jmh.annotations.Scope;
+import org.openjdk.jmh.annotations.Setup;
+import org.openjdk.jmh.annotations.State;
+import org.openjdk.jmh.annotations.Threads;
+import org.openjdk.jmh.annotations.Warmup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -22,10 +32,10 @@ import java.util.concurrent.TimeUnit;
 @Warmup(iterations = 3)
 @Measurement(iterations = 3)
 @State(Scope.Benchmark)
-@BenchmarkMode(Mode.AverageTime)
-@OutputTimeUnit(TimeUnit.MICROSECONDS)
+@BenchmarkMode(Mode.Throughput)
+@OutputTimeUnit(TimeUnit.MILLISECONDS)
 public class LoggingAspectBenchmark {
-    private static final Logger log = LoggerFactory.getLogger(LoggingAspectBenchmark.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(LoggingAspectBenchmark.class);
 
     private ConfigurableApplicationContext context;
 
@@ -43,20 +53,22 @@ public class LoggingAspectBenchmark {
     @EnableAspectJAutoProxy(proxyTargetClass = true)
     public static class LoggingAspectBenchmarkConfiguration {
         @Bean
-        public JmxControl jmxControl() {
+        public JmxControl loggingAspectJmxControl() {
             return new ToggleJmxControlImpl(true);
         }
 
         @Bean
         public LoggingAspect loggingAspect() {
-            return Aspects.aspectOf(LoggingAspect.class);
+            return new LoggingAspect();
         }
     }
 
     @Component
     public static class LoggingAspectBenchmarkComponent {
+        private static final Logger LOGGER = LoggerFactory.getLogger(LoggingAspectBenchmarkComponent.class);
+
         @Logging
-        void action() {
+        public void action() {
         }
     }
 

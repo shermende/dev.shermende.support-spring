@@ -24,8 +24,8 @@ import java.util.concurrent.TimeUnit;
 @Warmup(iterations = 3)
 @Measurement(iterations = 3)
 @State(Scope.Benchmark)
-@BenchmarkMode(Mode.AverageTime)
-@OutputTimeUnit(TimeUnit.MICROSECONDS)
+@BenchmarkMode(Mode.Throughput)
+@OutputTimeUnit(TimeUnit.MILLISECONDS)
 public class DirectInvocationBenchmark {
 
     private ConfigurableApplicationContext context;
@@ -35,7 +35,7 @@ public class DirectInvocationBenchmark {
         context = SpringApplication.run(DirectInvocationBenchmarkConfiguration.class);
     }
 
-    @Benchmark
+    @Benchmark 
     public void benchmark() {
         context.getBean(DirectInvocationBenchmarkComponent.class).action();
     }
@@ -47,7 +47,7 @@ public class DirectInvocationBenchmark {
 
     @Component
     public static class DirectInvocationBenchmarkComponent {
-        void action() {
+        public void action() {
         }
     }
 

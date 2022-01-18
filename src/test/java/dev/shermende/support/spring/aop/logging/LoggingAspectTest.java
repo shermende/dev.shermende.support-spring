@@ -7,7 +7,6 @@ import org.aspectj.lang.Aspects;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -43,11 +42,11 @@ public class LoggingAspectTest {
     }
 
     @Configuration
+    @Profile("!aspect-ctw")
     @EnableAspectJAutoProxy(proxyTargetClass = true)
-    @ConditionalOnMissingBean(LoggingAspectTest.LoggingAspectTestConfigurationCTW.class)
     public static class LoggingAspectTestConfigurationLTW {
         @Bean
-        public JmxControl jmxControl() {
+        public JmxControl loggingAspectJmxControl() {
             return new ToggleJmxControlImpl(true);
         }
 
@@ -61,7 +60,7 @@ public class LoggingAspectTest {
     @Profile("aspect-ctw")
     public static class LoggingAspectTestConfigurationCTW {
         @Bean
-        public JmxControl jmxControl() {
+        public JmxControl loggingAspectJmxControl() {
             return new ToggleJmxControlImpl(true);
         }
 

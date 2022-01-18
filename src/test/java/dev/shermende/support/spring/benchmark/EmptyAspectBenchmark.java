@@ -1,7 +1,7 @@
 package dev.shermende.support.spring.benchmark;
 
 import dev.shermende.support.spring.aop.empty.EmptyAspect;
-import dev.shermende.support.spring.aop.logging.annotation.Logging;
+import dev.shermende.support.spring.aop.empty.annotation.Empty;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Fork;
@@ -28,8 +28,8 @@ import java.util.concurrent.TimeUnit;
 @Warmup(iterations = 3)
 @Measurement(iterations = 3)
 @State(Scope.Benchmark)
-@BenchmarkMode(Mode.AverageTime)
-@OutputTimeUnit(TimeUnit.MICROSECONDS)
+@BenchmarkMode(Mode.Throughput)
+@OutputTimeUnit(TimeUnit.MILLISECONDS)
 public class EmptyAspectBenchmark {
 
     private ConfigurableApplicationContext context;
@@ -39,7 +39,7 @@ public class EmptyAspectBenchmark {
         context = SpringApplication.run(EmptyAspectBenchmarkConfiguration.class);
     }
 
-    @Benchmark
+    @Benchmark 
     public void benchmark() {
         context.getBean(EmptyAspectBenchmarkComponent.class).action();
     }
@@ -55,8 +55,8 @@ public class EmptyAspectBenchmark {
 
     @Component
     public static class EmptyAspectBenchmarkComponent {
-        @Logging
-        void action() {
+        @Empty
+        public void action() {
         }
     }
 
