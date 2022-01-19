@@ -95,7 +95,9 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
       - name: JHM benchmarking
-        run: mvn clean verify -Dexec.skip=false -Paspect-ctw -Dspring.profiles.active=aspect-ctw
+        env:
+          SPRING_PROFILE: aspect-ctw
+        run: mvn clean verify -Dexec.skip=false -Paspect-ctw
   deploy:
     name: Deploy snapshot
     runs-on: ubuntu-latest

@@ -6,6 +6,7 @@ import dev.shermende.support.spring.aop.intercept.annotation.Intercept;
 import dev.shermende.support.spring.aop.intercept.annotation.InterceptArgument;
 import dev.shermende.support.spring.jmx.JmxControl;
 import dev.shermende.support.spring.jmx.impl.ToggleJmxControlImpl;
+import org.aspectj.lang.Aspects;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Fork;
@@ -27,8 +28,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 @Fork(1)
@@ -44,7 +47,9 @@ public class InterceptAspectBenchmark {
 
     @Setup(Level.Trial)
     public synchronized void benchmarkSetup() {
-        context = SpringApplication.run(InterceptAspectBenchmarkConfiguration.class);
+        final SpringApplication application = new SpringApplication(InterceptAspectBenchmarkConfiguration.class);
+        Optional.ofNullable(System.getenv("SPRING_PROFILE")).ifPresent(application::setAdditionalProfiles);
+        context = application.run();
     }
 
     @Benchmark
@@ -52,11 +57,15 @@ public class InterceptAspectBenchmark {
         context.getBean(InterceptAspectBenchmarkComponent.class).convert(new Object());
     }
 
-    @Configuration
     @ComponentScan
+    public static class InterceptAspectBenchmarkConfiguration {
+    }
+
+    @Configuration
+    @Profile("!aspect-ctw")
     @EnableAspectJAutoProxy(proxyTargetClass = true)
-    public static class InterceptAspectBenchmarkConfiguration implements InitializingBean {
-        private static final Logger LOGGER = LoggerFactory.getLogger(InterceptAspectBenchmark.InterceptAspectBenchmarkConfiguration.class);
+    public static class InterceptAspectBenchmarkConfigurationLTW implements InitializingBean {
+        private static final Logger LOGGER = LoggerFactory.getLogger(InterceptAspectBenchmark.InterceptAspectBenchmarkConfigurationLTW.class);
 
         @Bean
         public JmxControl interceptAspectJmxControl() {
@@ -74,8 +83,31 @@ public class InterceptAspectBenchmark {
         }
     }
 
+    @Configuration
+    @Profile("aspect-ctw")
+    public static class InterceptAspectBenchmarkConfigurationCTW implements InitializingBean {
+        private static final Logger LOGGER = LoggerFactory.getLogger(InterceptAspectBenchmark.InterceptAspectBenchmarkConfigurationCTW.class);
+
+        @Bean
+        public JmxControl interceptAspectJmxControl() {
+            return new ToggleJmxControlImpl(true);
+        }
+
+        @Bean
+        public InterceptAspect interceptAspect() {
+            return Aspects.aspectOf(InterceptAspect.class);
+        }
+
+        @Override
+        public void afterPropertiesSet() throws Exception {
+            LOGGER.info("Compile time weaving mode");
+        }
+    }
+
     @Component
     public static class InterceptAspectBenchmarkComponent {
+        private static final Logger LOGGER = LoggerFactory.getLogger(InterceptAspectBenchmark.InterceptAspectBenchmarkComponent.class);
+
         @Intercept
         public Object convert(
             @InterceptArgument(InterceptAspectBenchmark.InterceptAspectBenchmarkInterceptor.class) Object payload

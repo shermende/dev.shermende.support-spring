@@ -5,6 +5,7 @@ import dev.shermende.support.spring.aop.intercept.Interceptor;
 import dev.shermende.support.spring.aop.intercept.annotation.InterceptResult;
 import dev.shermende.support.spring.jmx.JmxControl;
 import dev.shermende.support.spring.jmx.impl.ToggleJmxControlImpl;
+import org.aspectj.lang.Aspects;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Fork;
@@ -25,8 +26,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 @Fork(1)
@@ -42,7 +45,9 @@ public class InterceptResultAspectBenchmark {
 
     @Setup(Level.Trial)
     public synchronized void benchmarkSetup() {
-        context = SpringApplication.run(InterceptResultAspectBenchmarkConfiguration.class);
+        final SpringApplication application = new SpringApplication(InterceptResultAspectBenchmark.InterceptResultAspectBenchmarkConfiguration.class);
+        Optional.ofNullable(System.getenv("SPRING_PROFILE")).ifPresent(application::setAdditionalProfiles);
+        context = application.run();
     }
 
     @Benchmark
@@ -50,10 +55,14 @@ public class InterceptResultAspectBenchmark {
         context.getBean(InterceptResultAspectBenchmarkComponent.class).convert(new Object());
     }
 
-    @Configuration
     @ComponentScan
-    @EnableAspectJAutoProxy(proxyTargetClass = true)
     public static class InterceptResultAspectBenchmarkConfiguration {
+    }
+
+    @Configuration
+    @Profile("!aspect-ctw")
+    @EnableAspectJAutoProxy(proxyTargetClass = true)
+    public static class InterceptResultAspectBenchmarkConfigurationLTW {
         @Bean
         public JmxControl interceptResultAspectJmxControl() {
             return new ToggleJmxControlImpl(true);
@@ -62,6 +71,20 @@ public class InterceptResultAspectBenchmark {
         @Bean
         public InterceptResultAspect interceptResultAspect() {
             return new InterceptResultAspect();
+        }
+    }
+
+    @Configuration
+    @Profile("aspect-ctw")
+    public static class InterceptResultAspectBenchmarkConfigurationCTW {
+        @Bean
+        public JmxControl interceptResultAspectJmxControl() {
+            return new ToggleJmxControlImpl(true);
+        }
+
+        @Bean
+        public InterceptResultAspect interceptResultAspect() {
+            return Aspects.aspectOf(InterceptResultAspect.class);
         }
     }
 
