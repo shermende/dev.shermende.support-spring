@@ -1,10 +1,7 @@
-package dev.shermende.support.spring.benchmark;
+package dev.shermende.support.spring.benchmark.empty;
 
-import dev.shermende.support.spring.aop.logging.LoggingAspect;
-import dev.shermende.support.spring.aop.logging.annotation.Logging;
-import dev.shermende.support.spring.jmx.JmxControl;
-import dev.shermende.support.spring.jmx.impl.ToggleJmxControlImpl;
-import lombok.extern.slf4j.Slf4j;
+import dev.shermende.support.spring.aop.empty.EmptyAspect;
+import dev.shermende.support.spring.aop.empty.annotation.Empty;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Fork;
@@ -26,45 +23,40 @@ import org.springframework.stereotype.Component;
 
 import java.util.concurrent.TimeUnit;
 
-@Slf4j
 @Fork(1)
 @Threads(10)
 @Warmup(iterations = 3)
 @Measurement(iterations = 3)
 @State(Scope.Benchmark)
-@BenchmarkMode(Mode.AverageTime)
-@OutputTimeUnit(TimeUnit.MICROSECONDS)
-public class LoggingAspectDisabledBenchmark {
+@BenchmarkMode(Mode.Throughput)
+@OutputTimeUnit(TimeUnit.MILLISECONDS)
+public class EmptyAspectBenchmark {
 
     private ConfigurableApplicationContext context;
 
     @Setup(Level.Trial)
     public synchronized void benchmarkSetup() {
-        context = SpringApplication.run(LoggingAspectBenchmarkConfiguration.class);
+        context = SpringApplication.run(EmptyAspectBenchmarkConfiguration.class);
     }
 
     @Benchmark
     public void benchmark() {
-        context.getBean(LoggingAspectBenchmarkComponent.class).action();
+        context.getBean(EmptyAspectBenchmarkComponent.class).action();
     }
 
     @ComponentScan
     @EnableAspectJAutoProxy(proxyTargetClass = true)
-    public static class LoggingAspectBenchmarkConfiguration {
+    public static class EmptyAspectBenchmarkConfiguration {
         @Bean
-        public JmxControl jmxControl() {
-            return new ToggleJmxControlImpl(false);
-        }
-        @Bean
-        public LoggingAspect loggingAspect(JmxControl jmxControl) {
-            return new LoggingAspect(jmxControl);
+        public EmptyAspect emptyAspect() {
+            return new EmptyAspect();
         }
     }
 
     @Component
-    public static class LoggingAspectBenchmarkComponent {
-        @Logging
-        void action() {
+    public static class EmptyAspectBenchmarkComponent {
+        @Empty
+        public void action() {
         }
     }
 

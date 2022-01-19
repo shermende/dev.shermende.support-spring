@@ -2,14 +2,17 @@ package dev.shermende.support.spring.aop.intercept;
 
 import dev.shermende.support.spring.aop.intercept.annotation.Intercept;
 import dev.shermende.support.spring.aop.intercept.annotation.InterceptArgument;
-import lombok.extern.slf4j.Slf4j;
+import dev.shermende.support.spring.jmx.JmxControl;
+import dev.shermende.support.spring.jmx.impl.ToggleJmxControlImpl;
+import org.aspectj.lang.Aspects;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -29,33 +32,60 @@ public class InterceptAspectWrongSupportTest {
         component.convert(new Object());
     }
 
-    @ComponentScan
-    @EnableAspectJAutoProxy(proxyTargetClass = true)
+    @ComponentScan(basePackageClasses = {InterceptAspectWrongSupportTest.InterceptAspectWrongSupportTestConfiguration.class})
     public static class InterceptAspectWrongSupportTestConfiguration {
+
+    }
+
+    @ComponentScan
+    @Profile("!aspect-ctw")
+    @EnableAspectJAutoProxy(proxyTargetClass = true)
+    public static class InterceptAspectWrongSupportTestConfigurationLTW {
         @Bean
-        public InterceptAspect interceptAspect(BeanFactory factory) {
-            return new InterceptAspect(factory);
+        public JmxControl jmxControl() {
+            return new ToggleJmxControlImpl(true);
         }
 
         @Bean
-        public InterceptResultAspect interceptResultAspect(BeanFactory factory) {
-            return new InterceptResultAspect(factory);
+        public InterceptAspect interceptAspect() {
+            return new InterceptAspect();
+        }
+
+        @Bean
+        public InterceptResultAspect interceptResultAspect() {
+            return new InterceptResultAspect();
         }
     }
 
-    @Slf4j
+    @Configuration
+    @Profile("aspect-ctw")
+    public static class InterceptAspectWrongSupportTestConfigurationCTW {
+        @Bean
+        public JmxControl jmxControl() {
+            return new ToggleJmxControlImpl(true);
+        }
+
+        @Bean
+        public InterceptAspect interceptAspect() {
+            return Aspects.aspectOf(InterceptAspect.class);
+        }
+
+        @Bean
+        public InterceptResultAspect interceptResultAspect() {
+            return Aspects.aspectOf(InterceptResultAspect.class);
+        }
+    }
+
     @Component
     public static class InterceptAspectWrongSupportTestComponent {
         @Intercept
         public Object convert(
             @InterceptArgument(InterceptAspectWrongSupportTestInterceptor.class) Object payload
         ) {
-            log.debug("unreachable code. exception in interceptor.");
             return payload;
         }
     }
 
-    @Slf4j
     @Component
     public static class InterceptAspectWrongSupportTestInterceptor implements Interceptor {
         @Override
@@ -69,7 +99,6 @@ public class InterceptAspectWrongSupportTest {
         public void intercept(
             Object o
         ) {
-            log.debug("unreachable code. exception in supports(...) method.");
         }
     }
 }

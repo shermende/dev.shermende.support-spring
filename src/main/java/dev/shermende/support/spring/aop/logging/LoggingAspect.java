@@ -1,29 +1,35 @@
 package dev.shermende.support.spring.aop.logging;
 
 import dev.shermende.support.spring.jmx.JmxControl;
-import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.beans.factory.annotation.Qualifier;
+
+import java.util.Objects;
 
 /**
  *
  */
-@Slf4j
 @Aspect
-@RequiredArgsConstructor
+@Configurable
 public class LoggingAspect implements InitializingBean {
+    private static final Logger log = LoggerFactory.getLogger(LoggingAspect.class);
 
-    private final JmxControl jmxControl;
+    @Autowired(required = false)
+    @Qualifier("loggingAspectJmxControl")
+    private JmxControl jmxControl;
 
-    @SneakyThrows
-    @Around("@annotation(dev.shermende.support.spring.aop.logging.annotation.Logging)")
-    public Object logging(ProceedingJoinPoint proceedingJoinPoint) {
+    @Around("@annotation(dev.shermende.support.spring.aop.logging.annotation.Logging) && execution(public * *(..))")
+    public Object logging(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
         // do nothing if disabled
+        if (Objects.isNull(jmxControl)) return proceedingJoinPoint.proceed();
         if (!jmxControl.isEnabled()) return proceedingJoinPoint.proceed();
         // logging if enabled
         try {
@@ -52,6 +58,11 @@ public class LoggingAspect implements InitializingBean {
     @Override
     public void afterPropertiesSet() throws Exception {
         log.warn("Attention!!! @dev.shermende.support.spring.aop.logging.annotation.Logging annotation enabled");
+    }
+
+    // setter for autowire
+    public void setJmxControl(JmxControl jmxControl) {
+        this.jmxControl = jmxControl;
     }
 
 }
