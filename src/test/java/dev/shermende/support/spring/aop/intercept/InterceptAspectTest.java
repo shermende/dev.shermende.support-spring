@@ -3,15 +3,21 @@ package dev.shermende.support.spring.aop.intercept;
 import dev.shermende.support.spring.aop.intercept.annotation.Intercept;
 import dev.shermende.support.spring.aop.intercept.annotation.InterceptArgument;
 import dev.shermende.support.spring.aop.intercept.annotation.InterceptResult;
-import lombok.extern.slf4j.Slf4j;
+import dev.shermende.support.spring.jmx.JmxControl;
+import dev.shermende.support.spring.jmx.impl.ToggleJmxControlImpl;
+import org.aspectj.lang.Aspects;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.BeanFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -38,21 +44,64 @@ public class InterceptAspectTest {
         verify(interceptor, times(2)).intercept(object);
     }
 
-    @ComponentScan
-    @EnableAspectJAutoProxy(proxyTargetClass = true)
+    @ComponentScan(basePackageClasses = {InterceptAspectTestConfiguration.class})
     public static class InterceptAspectTestConfiguration {
+
+    }
+
+    @Configuration
+    @Profile("!aspect-ctw")
+    @EnableAspectJAutoProxy(proxyTargetClass = true)
+    public static class InterceptAspectTestConfigurationLTW implements InitializingBean {
+        private static final Logger LOGGER = LoggerFactory.getLogger(InterceptAspectTestConfigurationLTW.class);
+
         @Bean
-        public InterceptAspect interceptAspect(BeanFactory factory) {
-            return new InterceptAspect(factory);
+        public JmxControl jmxControl() {
+            return new ToggleJmxControlImpl(true);
         }
 
         @Bean
-        public InterceptResultAspect interceptResultAspect(BeanFactory factory) {
-            return new InterceptResultAspect(factory);
+        public InterceptAspect interceptAspectLTW() {
+            return new InterceptAspect();
+        }
+
+        @Bean
+        public InterceptResultAspect interceptResultAspectLTW() {
+            return new InterceptResultAspect();
+        }
+
+        @Override
+        public void afterPropertiesSet() throws Exception {
+            LOGGER.info("Load time weaving mode");
         }
     }
 
-    @Slf4j
+    @Configuration
+    @Profile("aspect-ctw")
+    public static class InterceptAspectTestConfigurationCTW implements InitializingBean {
+        private static final Logger LOGGER = LoggerFactory.getLogger(InterceptAspectTestConfigurationCTW.class);
+
+        @Bean
+        public JmxControl jmxControl() {
+            return new ToggleJmxControlImpl(true);
+        }
+
+        @Bean
+        public InterceptAspect interceptAspectCTW() {
+            return Aspects.aspectOf(InterceptAspect.class);
+        }
+
+        @Bean
+        public InterceptResultAspect interceptResultAspectCTW() {
+            return Aspects.aspectOf(InterceptResultAspect.class);
+        }
+
+        @Override
+        public void afterPropertiesSet() throws Exception {
+            LOGGER.info("Compile time weaving mode");
+        }
+    }
+
     @Component
     public static class InterceptAspectTestComponent {
         @Intercept
@@ -64,7 +113,6 @@ public class InterceptAspectTest {
         }
     }
 
-    @Slf4j
     @Component
     public static class InterceptAspectTestInterceptor implements Interceptor {
         @Override
@@ -78,7 +126,6 @@ public class InterceptAspectTest {
         public void intercept(
             Object payload
         ) {
-            log.debug("interceptor working... {}", payload);
         }
     }
 }

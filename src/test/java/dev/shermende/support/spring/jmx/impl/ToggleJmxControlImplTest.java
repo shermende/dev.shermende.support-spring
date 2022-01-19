@@ -1,13 +1,11 @@
 package dev.shermende.support.spring.jmx.impl;
 
 import dev.shermende.support.spring.jmx.ToggleJmxControl;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 
-@Slf4j
 @RunWith(MockitoJUnitRunner.class)
 public class ToggleJmxControlImplTest {
 

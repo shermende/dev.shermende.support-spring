@@ -3,55 +3,78 @@ package dev.shermende.support.spring.aop.profiling;
 import dev.shermende.support.spring.aop.profiling.annotation.Profiling;
 import dev.shermende.support.spring.jmx.JmxControl;
 import dev.shermende.support.spring.jmx.impl.ToggleJmxControlImpl;
-import lombok.extern.slf4j.Slf4j;
+import org.aspectj.lang.Aspects;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = {ProfilingAspectTest.ProfilingAspectTestConfiguration.class})
 public class ProfilingAspectTest {
 
     @SpyBean
-    private ProfilingAspect aspect;
+    private JmxControl jmxControl;
 
     @Autowired
     private ProfilingAspectTest.ProfilingAspectTestComponent component;
 
     @Test
-    public void profiling() {
+    public void profiling() throws Throwable {
         component.convert(new Object());
-        verify(aspect, times(1)).profiling(any());
+        then(jmxControl).should(times(1)).isEnabled();
     }
 
-    @ComponentScan
-    @EnableAspectJAutoProxy(proxyTargetClass = true)
+    @ComponentScan(basePackageClasses = {ProfilingAspectTest.ProfilingAspectTestConfiguration.class})
     public static class ProfilingAspectTestConfiguration {
+    }
+
+    @Configuration
+    @Profile("!aspect-ctw")
+    @EnableAspectJAutoProxy(proxyTargetClass = true)
+    public static class ProfilingAspectTestConfigurationLTW {
         @Bean
         public JmxControl jmxControl() {
             return new ToggleJmxControlImpl(true);
         }
 
         @Bean
-        public ProfilingAspect interceptAspect(JmxControl jmxControl) {
-            return new ProfilingAspect(jmxControl);
+        public ProfilingAspect interceptAspect() {
+            return new ProfilingAspect();
         }
     }
 
-    @Slf4j
+    @Configuration
+    @Profile("aspect-ctw")
+    public static class ProfilingAspectTestConfigurationCTW {
+        @Bean
+        public JmxControl jmxControl() {
+            return new ToggleJmxControlImpl(true);
+        }
+
+        @Bean
+        public ProfilingAspect profilingAspect() {
+            return Aspects.aspectOf(ProfilingAspect.class);
+        }
+    }
+
     @Component
     public static class ProfilingAspectTestComponent {
+        private static final Logger LOGGER = LoggerFactory.getLogger(ProfilingAspectTestComponent.class);
+
         @Profiling
         public Object convert(
             Object payload

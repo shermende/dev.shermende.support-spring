@@ -1,9 +1,11 @@
-package dev.shermende.support.spring.benchmark;
+package dev.shermende.support.spring.benchmark.interceptresult;
 
 import dev.shermende.support.spring.aop.intercept.InterceptResultAspect;
 import dev.shermende.support.spring.aop.intercept.Interceptor;
 import dev.shermende.support.spring.aop.intercept.annotation.InterceptResult;
-import lombok.extern.slf4j.Slf4j;
+import dev.shermende.support.spring.jmx.JmxControl;
+import dev.shermende.support.spring.jmx.impl.ToggleJmxControlImpl;
+import org.aspectj.lang.Aspects;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Fork;
@@ -16,31 +18,36 @@ import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.Threads;
 import org.openjdk.jmh.annotations.Warmup;
-import org.springframework.beans.factory.BeanFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
-@Slf4j
 @Fork(1)
 @Threads(10)
 @Warmup(iterations = 3)
 @Measurement(iterations = 3)
 @State(Scope.Benchmark)
-@BenchmarkMode(Mode.AverageTime)
-@OutputTimeUnit(TimeUnit.MICROSECONDS)
+@BenchmarkMode(Mode.Throughput)
+@OutputTimeUnit(TimeUnit.MILLISECONDS)
 public class InterceptResultAspectBenchmark {
 
     private ConfigurableApplicationContext context;
 
     @Setup(Level.Trial)
     public synchronized void benchmarkSetup() {
-        context = SpringApplication.run(InterceptResultAspectBenchmarkConfiguration.class);
+        final SpringApplication application = new SpringApplication(InterceptResultAspectBenchmark.InterceptResultAspectBenchmarkConfiguration.class);
+        Optional.ofNullable(System.getenv("SPRING_PROFILE")).ifPresent(application::setAdditionalProfiles);
+        context = application.run();
     }
 
     @Benchmark
@@ -49,15 +56,38 @@ public class InterceptResultAspectBenchmark {
     }
 
     @ComponentScan
-    @EnableAspectJAutoProxy(proxyTargetClass = true)
     public static class InterceptResultAspectBenchmarkConfiguration {
+    }
+
+    @Configuration
+    @Profile("!aspect-ctw")
+    @EnableAspectJAutoProxy(proxyTargetClass = true)
+    public static class InterceptResultAspectBenchmarkConfigurationLTW {
         @Bean
-        public InterceptResultAspect interceptResultAspect(BeanFactory factory) {
-            return new InterceptResultAspect(factory);
+        public JmxControl interceptResultAspectJmxControl() {
+            return new ToggleJmxControlImpl(true);
+        }
+
+        @Bean
+        public InterceptResultAspect interceptResultAspect() {
+            return new InterceptResultAspect();
         }
     }
 
-    @Slf4j
+    @Configuration
+    @Profile("aspect-ctw")
+    public static class InterceptResultAspectBenchmarkConfigurationCTW {
+        @Bean
+        public JmxControl interceptResultAspectJmxControl() {
+            return new ToggleJmxControlImpl(true);
+        }
+
+        @Bean
+        public InterceptResultAspect interceptResultAspect() {
+            return Aspects.aspectOf(InterceptResultAspect.class);
+        }
+    }
+
     @Component
     public static class InterceptResultAspectBenchmarkComponent {
         @InterceptResult(InterceptResultAspectBenchmark.InterceptResultAspectBenchmarkInterceptor.class)
@@ -68,9 +98,10 @@ public class InterceptResultAspectBenchmark {
         }
     }
 
-    @Slf4j
     @Component
     public static class InterceptResultAspectBenchmarkInterceptor implements Interceptor {
+        private static final Logger LOGGER = LoggerFactory.getLogger(InterceptResultAspectBenchmark.InterceptResultAspectBenchmarkInterceptor.class);
+
         @Override
         public boolean supports(
             Class<?> aClass
@@ -82,7 +113,7 @@ public class InterceptResultAspectBenchmark {
         public void intercept(
             Object payload
         ) {
-            log.debug("interceptor working... {}", payload);
+            LOGGER.debug("InterceptResultAspectBenchmarkInterceptor");
         }
     }
 

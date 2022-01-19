@@ -1,7 +1,6 @@
-package dev.shermende.support.spring.benchmark;
+package dev.shermende.support.spring.benchmark.factory;
 
 import dev.shermende.support.spring.factory.AbstractFactory;
-import lombok.extern.slf4j.Slf4j;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Fork;
@@ -23,14 +22,13 @@ import org.springframework.stereotype.Component;
 
 import java.util.concurrent.TimeUnit;
 
-@Slf4j
 @Fork(1)
 @Threads(10)
 @Warmup(iterations = 3)
 @Measurement(iterations = 3)
 @State(Scope.Benchmark)
-@BenchmarkMode(Mode.AverageTime)
-@OutputTimeUnit(TimeUnit.MICROSECONDS)
+@BenchmarkMode(Mode.Throughput)
+@OutputTimeUnit(TimeUnit.MILLISECONDS)
 public class AbstractFactoryTestBenchmark {
 
     private ConfigurableApplicationContext context;
