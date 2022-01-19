@@ -77,12 +77,6 @@
     </distributionManagement>
 
     <dependencies>
-        <dependency>
-            <groupId>org.redisson</groupId>
-            <artifactId>redisson</artifactId>
-            <version>3.16.0</version>
-        </dependency>
-
         <!--spring context-->
         <dependency>
             <groupId>org.springframework</groupId>

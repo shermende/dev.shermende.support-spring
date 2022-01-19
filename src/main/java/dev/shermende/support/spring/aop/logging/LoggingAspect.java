@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.beans.factory.annotation.Qualifier;
 
+import java.util.Objects;
+
 /**
  *
  */
@@ -20,13 +22,14 @@ import org.springframework.beans.factory.annotation.Qualifier;
 public class LoggingAspect implements InitializingBean {
     private static final Logger log = LoggerFactory.getLogger(LoggingAspect.class);
 
-    @Autowired
+    @Autowired(required = false)
     @Qualifier("loggingAspectJmxControl")
     private JmxControl jmxControl;
 
     @Around("@annotation(dev.shermende.support.spring.aop.logging.annotation.Logging) && execution(public * *(..))")
     public Object logging(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
         // do nothing if disabled
+        if (Objects.isNull(jmxControl)) return proceedingJoinPoint.proceed();
         if (!jmxControl.isEnabled()) return proceedingJoinPoint.proceed();
         // logging if enabled
         try {
