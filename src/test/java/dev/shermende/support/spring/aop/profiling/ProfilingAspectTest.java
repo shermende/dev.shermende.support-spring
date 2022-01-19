@@ -47,12 +47,12 @@ public class ProfilingAspectTest {
     @EnableAspectJAutoProxy(proxyTargetClass = true)
     public static class ProfilingAspectTestConfigurationLTW {
         @Bean
-        public JmxControl jmxControl() {
+        public JmxControl profilingAspectJmxControl() {
             return new ToggleJmxControlImpl(true);
         }
 
         @Bean
-        public ProfilingAspect interceptAspect() {
+        public ProfilingAspect profilingAspect() {
             return new ProfilingAspect();
         }
     }
@@ -61,7 +61,7 @@ public class ProfilingAspectTest {
     @Profile("aspect-ctw")
     public static class ProfilingAspectTestConfigurationCTW {
         @Bean
-        public JmxControl jmxControl() {
+        public JmxControl profilingAspectJmxControl() {
             return new ToggleJmxControlImpl(true);
         }
 

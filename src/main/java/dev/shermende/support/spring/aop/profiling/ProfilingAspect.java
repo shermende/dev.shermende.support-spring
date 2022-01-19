@@ -10,8 +10,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.lang.reflect.Method;
+import java.util.Objects;
 
 /**
  *
@@ -21,12 +23,14 @@ import java.lang.reflect.Method;
 public class ProfilingAspect implements InitializingBean {
     private static final Logger log = LoggerFactory.getLogger(ProfilingAspect.class);
 
-    @Autowired
+    @Autowired(required = false)
+    @Qualifier("profilingAspectJmxControl")
     private JmxControl jmxControl;
 
     @Around("@annotation(dev.shermende.support.spring.aop.profiling.annotation.Profiling) && execution(public * *(..))")
     public Object profiling(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
         // do nothing if disabled
+        if (Objects.isNull(jmxControl)) return proceedingJoinPoint.proceed();
         if (!jmxControl.isEnabled()) return proceedingJoinPoint.proceed();
         // logging if enabled
         final long start = System.currentTimeMillis();
