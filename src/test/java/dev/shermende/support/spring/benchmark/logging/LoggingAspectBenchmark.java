@@ -4,6 +4,7 @@ import dev.shermende.support.spring.aop.logging.LoggingAspect;
 import dev.shermende.support.spring.aop.logging.annotation.Logging;
 import dev.shermende.support.spring.jmx.JmxControl;
 import dev.shermende.support.spring.jmx.impl.ToggleJmxControlImpl;
+import org.aspectj.lang.Aspects;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Fork;
@@ -24,8 +25,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 @Fork(1)
@@ -41,7 +44,9 @@ public class LoggingAspectBenchmark {
 
     @Setup(Level.Trial)
     public synchronized void benchmarkSetup() {
-        context = SpringApplication.run(LoggingAspectBenchmarkConfiguration.class);
+        final SpringApplication application = new SpringApplication(LoggingAspectBenchmark.LoggingAspectBenchmarkConfiguration.class);
+        Optional.ofNullable(System.getenv("SPRING_PROFILE")).ifPresent(application::setAdditionalProfiles);
+        context = application.run();
     }
 
     @Benchmark
@@ -49,10 +54,14 @@ public class LoggingAspectBenchmark {
         context.getBean(LoggingAspectBenchmarkComponent.class).action();
     }
 
-    @Configuration
     @ComponentScan
-    @EnableAspectJAutoProxy(proxyTargetClass = true)
     public static class LoggingAspectBenchmarkConfiguration {
+    }
+
+    @Configuration
+    @Profile("!aspect-ctw")
+    @EnableAspectJAutoProxy(proxyTargetClass = true)
+    public static class LoggingAspectBenchmarkConfigurationLTW {
         @Bean
         public JmxControl loggingAspectJmxControl() {
             return new ToggleJmxControlImpl(true);
@@ -61,6 +70,20 @@ public class LoggingAspectBenchmark {
         @Bean
         public LoggingAspect loggingAspect() {
             return new LoggingAspect();
+        }
+    }
+
+    @Configuration
+    @Profile("aspect-ctw")
+    public static class LoggingAspectBenchmarkConfigurationCTW {
+        @Bean
+        public JmxControl loggingAspectJmxControl() {
+            return new ToggleJmxControlImpl(true);
+        }
+
+        @Bean
+        public LoggingAspect loggingAspect() {
+            return Aspects.aspectOf(LoggingAspect.class);
         }
     }
 

@@ -4,6 +4,7 @@ import dev.shermende.support.spring.aop.profiling.ProfilingAspect;
 import dev.shermende.support.spring.aop.profiling.annotation.Profiling;
 import dev.shermende.support.spring.jmx.JmxControl;
 import dev.shermende.support.spring.jmx.impl.ToggleJmxControlImpl;
+import org.aspectj.lang.Aspects;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Fork;
@@ -24,8 +25,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 @Fork(1)
@@ -41,7 +44,9 @@ public class ProfilingAspectDisabledBenchmark {
 
     @Setup(Level.Trial)
     public synchronized void benchmarkSetup() {
-        context = SpringApplication.run(ProfilingAspectTestConfiguration.class);
+        final SpringApplication application = new SpringApplication(ProfilingAspectDisabledBenchmark.ProfilingAspectTestConfiguration.class);
+        Optional.ofNullable(System.getenv("SPRING_PROFILE")).ifPresent(application::setAdditionalProfiles);
+        context = application.run();
     }
 
     @Benchmark
@@ -49,18 +54,36 @@ public class ProfilingAspectDisabledBenchmark {
         context.getBean(ProfilingAspectTestComponent.class).action();
     }
 
-    @Configuration
     @ComponentScan
-    @EnableAspectJAutoProxy(proxyTargetClass = true)
     public static class ProfilingAspectTestConfiguration {
+    }
+
+    @Configuration
+    @Profile("!aspect-ctw")
+    @EnableAspectJAutoProxy(proxyTargetClass = true)
+    public static class ProfilingAspectTestConfigurationLTW {
         @Bean
-        public JmxControl profilingAspectDisabledJmxControl() {
-            return new ToggleJmxControlImpl(false);
+        public JmxControl profilingAspectJmxControl() {
+            return new ToggleJmxControlImpl(true);
         }
 
         @Bean
         public ProfilingAspect profilingAspect() {
             return new ProfilingAspect();
+        }
+    }
+
+    @Configuration
+    @Profile("aspect-ctw")
+    public static class ProfilingAspectTestConfigurationCTW {
+        @Bean
+        public JmxControl profilingAspectJmxControl() {
+            return new ToggleJmxControlImpl(true);
+        }
+
+        @Bean
+        public ProfilingAspect profilingAspect() {
+            return Aspects.aspectOf(ProfilingAspect.class);
         }
     }
 
