@@ -41,7 +41,7 @@
 
         <!-- lib versions -->
         <spring-boot.version>2.1.0.RELEASE</spring-boot.version>
-        <springframework.version>5.1.0.RELEASE</springframework.version>
+        <springframework.version>5.2.22.RELEASE</springframework.version>
         <logback-classic.version>1.2.3</logback-classic.version>
         <jmh-core.version>1.26</jmh-core.version>
         <lombok.version>1.18.12</lombok.version>
